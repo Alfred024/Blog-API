@@ -1,14 +1,14 @@
+require('dotenv').config();
+
 module.exports = {
     api:{
         port: process.env.API_PORT || 3000,
     },
-    jwt:{
-        secret: process.env.JWT_SECRET || 'secrete',
-    },
     postgresql:{
-        host: process.env.MYSQL_HOST || '',
-        user: process.env.MYSQL_USER || '',
-        password: process.env.MYSQL_PASS|| '',
-        database: process.env.MYSQL_DB || '',
+        host: process.env.DB_HOST,
+        database: process.env.DB_NAME,
+        port: process.env.DB_PORT,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
     },
 }
