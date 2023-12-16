@@ -3,11 +3,11 @@ const { Client } = require('pg');
 const config = require('../config/index');
 
 const connectionData = {
-    port: config.postgresqlService.port_app,
-    host: config.postgresqlService.host,
-    user: config.postgresqlService.user,
-    password: config.postgresqlService.password,
-    database: config.postgresqlService.database,
+    port: config.postgresql_database.port,
+    host: config.postgresql_database.host,
+    user: config.postgresql_database.user,
+    password: config.postgresql_database.password,
+    database: config.postgresql_database.database,
 };
 const client = new Client(connectionData)
 
