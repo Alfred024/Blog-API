@@ -1,3 +1,4 @@
+//NOTA: Esnecesario agregar el módulo que se encarga de abrir el Pool e implementarlo 
 const { Client } = require('pg');
 const config = require('../config/index');
 
@@ -15,68 +16,80 @@ function handleCon() {
         client.connect();
         console.log('PostgreSQL DB succesfully connected');
     } catch (error) {
-        console.error('[db connnection error]', err);
+        console.error('[db connnection error]', error);
     }
 }
 handleCon();
 
-function get_all(table) {
-    // client.query(`SELECT * FROM ${table}`)
-    //     .then(response => {
-    //         console.log(response.rows)
-    //         client.end()
-    //     })
-    //     .catch(err => {
-    //         client.end()
-    //     });
-
+function select_all(table) {
     return new Promise((resolve, reject) =>{
         client.query(`SELECT * FROM ${table}`, (error, data) =>{
-            if (error) return reject(error);
-            resolve(data);
+            if (error) {
+                //client.end();
+                return reject(error);
+            }else{
+                resolve(data.rows);
+                //client.end()
+            }
         });
     });
 }
 
-// function get_where(table, id) {
-//     return new Promise((resolve, reject) => {
-//         client.query(`SELECT * FROM ${table} WHERE id=${id}`, (err, data) => {
-//             if (err) return reject(err);
-//             resolve(data);
-//         })
-//     })
-// }
+function select_where(table, id) {
+    return new Promise((resolve, reject) => {
+        client.query(`SELECT * FROM ${table} WHERE id=${id}`, (error, data) => {
+            if (error) {
+                return reject(error);
+            }else{
+                resolve(data.rows);
+            }
+        })
+    })
+}
 
-// function upsert(table, data) {
-//     if (data && data.id) {
-//         return update(table, data);
-//     } else {
-//         return insert(table, data);
-//     }
-// }
+//Para esta función hay que completar todos los valores que definen la tabla
+function insert(table, data) {
+    return new Promise((resolve, reject) => {
+        client.query(`INSERT INTO ${table} VALUES ?`, (error, result) => {
+            if (error) {
+                return reject(error);
+            }else{
+                resolve(result);
+            }
+        })
+    })
+}
 
-// function insert(table, data) {
-//     return new Promise((resolve, reject) => {
-//         client.query(`INSERT INTO ${table} SET ?`, data, (err, result) => {
-//             if (err) return reject(err);
-//             resolve(result);
-//         })
-//     })
-// }
+function update_by_param(table, data) {
+    return new Promise((resolve, reject) => {
+        client.query(`UPDATE ${table} SET ? WHERE id=?`, [data, data.id], (error, result) => {
+            if (error) {
+                return reject(error);
+            }else{
+                resolve(result);
+            }
+        })
+    })
+}
 
-// function update(table, data) {
-//     return new Promise((resolve, reject) => {
-//         client.query(`UPDATE ${table} SET ? WHERE id=?`, [data, data.id], (err, result) => {
-//             if (err) return reject(err);
-//             resolve(result);
-//         })
-//     })
-// }
+function delete_by_id(table, id) {
+    return new Promise((resolve, reject) => {
+        client.query(`DELETE FROM ${table} WHERE id=${id}`, (error, result) => {
+            if (error) {
+                return reject(error);
+            }else{
+                resolve(result);
+            }
+        })
+    });
+}
 
 module.exports = {
-    get_all,
-    //get_where,
-    //upsert,
+    select_all,
+    select_where,
+    insert,
+    update_by_param,
+    delete_by_id,
 };
 
 
