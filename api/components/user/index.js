@@ -1,5 +1,5 @@
-// const store = require('store-microservce-path');
+const store = require('../../../store/remote-postgresql');
 const ctrl = require('./controller');
 
-// module.exports = ctrl(store);
-module.exports = ctrl([]);
+module.exports = ctrl(store);
+//module.exports = ctrl([]);

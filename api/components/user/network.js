@@ -6,14 +6,14 @@ const router = express.Router();
 
 //Agregar middleware que maneje el despliegue de mensaje de el estado de la respuesta (dependencia boom para code status)
 router.get('/', (req, res)=>{
-    Controller.get()
+    Controller.list()
         .then((data) =>{
             console.log(data);
+            res.send(data);
         })
         .catch((err) =>{
-            console.log(err);
+            console.log('PROBLEMA EN EL GET DLE NEWTWORK USER.JS');
         });
-        res.send('USER route');
 });
 
 module.exports = router;
