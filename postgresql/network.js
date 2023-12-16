@@ -10,23 +10,23 @@ router.get('/:table', list);
 // router.put('/:table', upsert);
 
 async function list(req, res, next) {
-    const datos = await Store.get_all(req.params.table);
-    res.send('datos');
+    const data = await Store.get_all(req.params.table);
+    res.send(data);
 }
 
 // async function get(req, res, next) {
-//     const datos = await Store.get(req.params.table, req.params.id)
-//     response.success(req, res, datos, 200);
+//     const data = await Store.get(req.params.table, req.params.id)
+//     response.success(req, res, data, 200);
 // }
 
 // async function insert(req, res, next) {
-//     const datos = await Store.insert(req.params.table, req.body)
-//     response.success(req, res, datos, 200);
+//     const data = await Store.insert(req.params.table, req.body)
+//     response.success(req, res, data, 200);
 // }
 
 // async function upsert(req, res, next) {
-//     const datos = await Store.upsert(req.params.table, req.body)
-//     response.success(req, res, datos, 200);
+//     const data = await Store.upsert(req.params.table, req.body)
+//     response.success(req, res, data, 200);
 // }
 
 

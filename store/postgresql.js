@@ -2,6 +2,7 @@ const { Client } = require('pg');
 const config = require('../config/index');
 
 const connectionData = {
+    port: config.postgresqlService.port_app,
     host: config.postgresqlService.host,
     user: config.postgresqlService.user,
     password: config.postgresqlService.password,
@@ -14,20 +15,27 @@ function handleCon() {
         client.connect();
         console.log('PostgreSQL DB succesfully connected');
     } catch (error) {
-        console.error('[db err]', err);
+        console.error('[db connnection error]', err);
     }
 }
 handleCon();
 
-function get_all(table, id) {
-    client.query(`SELECT * FROM ${table}`)
-        .then(response => {
-            console.log(response.rows)
-            client.end()
-        })
-        .catch(err => {
-            client.end()
-        })
+function get_all(table) {
+    // client.query(`SELECT * FROM ${table}`)
+    //     .then(response => {
+    //         console.log(response.rows)
+    //         client.end()
+    //     })
+    //     .catch(err => {
+    //         client.end()
+    //     });
+
+    return new Promise((resolve, reject) =>{
+        client.query(`SELECT * FROM ${table}`, (error, data) =>{
+            if (error) return reject(error);
+            resolve(data);
+        });
+    });
 }
 
 // function get_where(table, id) {
