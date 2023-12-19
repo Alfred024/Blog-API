@@ -1,9 +1,11 @@
 //Función genérica para conectarse a X micro-servicio de Bases de datos 
 //Provee los métodos al Controller del componente en la API
 
-//const axios = require('axios').default;
-//import axios from 'axios';
-const axios = require('axios/dist/node/axios.cjs');
+//Use this import if youre using node to run the API
+const axios = require('axios');
+
+//Use this import if youre using npx nodemon to run the API
+//const axios = require('axios/dist/node/axios.cjs');
 
 
 function connectToRemoteDBService(host, port) {

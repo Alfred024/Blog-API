@@ -5,7 +5,7 @@
 
     1.- Run the command **npm init**
     2.- Create .env file with the variables of your services.
-    3.- Start the API by running **node api/index.js**
+    3.- Start the API by running **node api/index.js** (If youre suing nodemon run **npx nodemon api/index.js** instead)
     4.- Start the PostgreSQL DB service by running **node postgresql/index.js**
 
 Know you must be able to use the API endpoints.
