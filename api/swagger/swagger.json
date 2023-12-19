@@ -1,0 +1,162 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "TecNM Blog API Documentation",
+      "description": "This is the official documentation of the _TecNM Blog API_ created with Swagger.\n\nImportant links:\n- [Project repository](https://github.com/Alfred024/Blog-API)\n- [Web page of the team](https://itcoders.tech/)",
+      "version": "1.0.0"
+    },
+    "externalDocs": {
+      "description": "Find out more about Swagger",
+      "url": "http://swagger.io"
+    },
+    "servers": [
+      {
+        "url": "https://dns_coming_soon/api/v3"
+      }
+    ],
+    "tags": [
+      {
+        "name": "user",
+        "description": "Operations of user"
+      }
+    ],
+    "paths": {
+      "/user/{id_user}": {
+        "get": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Get user by user name",
+          "description": "",
+          "operationId": "getUserByName",
+          "parameters": [
+            {
+              "name": "id_user",
+              "in": "path",
+              "description": "The name that needs to be fetched. Use user1 for testing. ",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid id supplied"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Delete user",
+          "description": "This can only be done by the logged in user.",
+          "operationId": "deleteUser",
+          "parameters": [
+            {
+              "name": "id_user",
+              "in": "path",
+              "description": "The name that needs to be deleted",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "400": {
+              "description": "Invalid username supplied"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string",
+              "example": "Chanclón"
+            },
+            "firstName": {
+              "type": "string",
+              "example": "Van"
+            },
+            "lastName": {
+              "type": "string",
+              "example": "Dam"
+            },
+            "email": {
+              "type": "string",
+              "example": "chanclonvandam@gmail.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "12345"
+            },
+            "userStatus": {
+              "type": "integer",
+              "description": "User Status",
+              "format": "int32",
+              "example": 1
+            }
+          },
+          "xml": {
+            "name": "user"
+          }
+        },
+        "ApiResponse": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "type": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "xml": {
+            "name": "##default"
+          }
+        }
+      },
+      "requestBodies": {
+        "UserArray": {
+          "description": "List of user object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
