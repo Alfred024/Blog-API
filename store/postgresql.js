@@ -62,10 +62,10 @@ function delete_by_id(table, id) {
 
 function insert_user(table, data) {
     return new Promise((resolve, reject) => {
-        const {email, password, rol} = data;
+        const {email, password, role} = data;
         const query = {
-            text: `INSERT INTO ${table} (email, password, rol) VALUES($1, $2, $3)`,
-            values: [email, rol, password],
+            text: `INSERT INTO ${table} (email, password, role) VALUES($1, $2, $3)`,
+            values: [email, role, password],
         }
         client.query(query,(error, result) => {
             if (error) {

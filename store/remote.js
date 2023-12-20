@@ -19,9 +19,9 @@ function connectToRemoteDBService(host, port) {
         return req('GET', table, id);
     }
 
-    // function insert(table, data) {
-    //     return req('POST', table, data);
-    // }
+    function insert(table, data) {
+        return req('POST', table, data);
+    }
 
     // function update(table, data) {
     //     return req('PUT', table, data);
@@ -58,7 +58,7 @@ function connectToRemoteDBService(host, port) {
     return {
         list,
         get,
-        //insert,
+        insert,
         //update,
         delete_by_id,
     };

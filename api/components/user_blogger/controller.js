@@ -9,22 +9,21 @@ module.exports = function (injectedStore) {
     }
 
     async function list() {
-        // return {
-        //     "get_test_status": "SUCCESS",
-        // }
         console.log('getting data from store');
         return await store.list(TABLE);
     }
 
     async function get(id) {
-        // return {
-        //     "get_test_status": "SUCCESS",
-        // }
         return await store.get(TABLE, id);
     }
     
+    async function insert(data){
+        return await store.insert(TABLE, data);
+    }
+
     return {
         list,
         get,
+        insert,
     };
 }

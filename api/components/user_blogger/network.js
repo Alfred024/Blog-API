@@ -15,7 +15,36 @@ router.get('/',
                 res.send(data);
             })
             .catch((err) =>{
-                console.log('PROBLEMA EN EL GET DLE NEWTWORK USER.JS');
+                console.log(err);
+            });
+    }
+);
+
+router.get('/:id', 
+    (req, res)=>{
+        const id = req.params.id;
+        Controller.get(id)
+            .then((data) =>{
+                console.log(data);
+                res.send(data);
+            })
+            .catch((err) =>{
+                console.log(err);
+            });
+    }
+);
+
+router.post('/', 
+    validatorHandler(createUserBloggerSchema, 'body'),
+    (req, res)=>{
+        const data = req.body;
+        Controller.insert(data)
+            .then((data) =>{
+                console.log(data);
+                res.send(data);
+            })
+            .catch((err) =>{
+                console.log(err);
             });
     }
 );

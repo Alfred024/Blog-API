@@ -4,7 +4,9 @@ const joiPassword = Joi.extend(joiPasswordExtendCore);
 
 const id = Joi.number();
 const email = Joi.string().email();
+//Modificar las características de la contrasñe de acuerdo a lo que diga el POU
 const password = Joi.string().min(6);
+//Este dato es una clase de enum, habría que pregunta a Uri cuál 
 const role = Joi.string().min(5);
 
 const getUserBloggerSchema = Joi.object({
