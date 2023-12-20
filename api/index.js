@@ -3,12 +3,12 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 const swaggerDocs = require('./swagger/network');
-const user = require('./components/user/network');
+const user = require('./components/user_blogger/network');
 
 app.use(express.json());
 
 //Routes components
-app.use('/api/user', user);
+app.use('/api/user_blogger', user);
 app.use('/api-docs', swaggerDocs);
 
 app.get('/api/', (req, res)=>{

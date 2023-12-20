@@ -1,5 +1,5 @@
 
-const TABLE = 'user_table';
+const TABLE = 'user_blogger';
 
 module.exports = function (injectedStore) {
     let store = injectedStore;
