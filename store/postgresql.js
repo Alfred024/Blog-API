@@ -21,6 +21,7 @@ function handleCon() {
 }
 handleCon();
 
+//GENERIC FUNCTIONS
 function select_all(table) {
     return new Promise((resolve, reject) =>{
         client.query(`SELECT * FROM ${table}`, (error, data) =>{
@@ -47,10 +48,26 @@ function select_where(table, id) {
     })
 }
 
-//Para esta función hay que completar todos los valores que definen la tabla
-function insert(table, data) {
+function delete_by_id(table, id) {
     return new Promise((resolve, reject) => {
-        client.query(`INSERT INTO ${table} VALUES ?`, (error, result) => {
+        client.query(`DELETE FROM ${table} WHERE id=${id}`, (error, result) => {
+            if (error) {
+                return reject(error);
+            }else{
+                resolve(result);
+            }
+        })
+    });
+}
+
+function insert_user(table, data) {
+    return new Promise((resolve, reject) => {
+        const {email, password, rol} = data;
+        const query = {
+            text: `INSERT INTO ${table} (email, password, rol) VALUES($1, $2, $3)`,
+            values: [email, rol, password],
+        }
+        client.query(query,(error, result) => {
             if (error) {
                 return reject(error);
             }else{
@@ -72,22 +89,11 @@ function update_by_param(table, data) {
     })
 }
 
-function delete_by_id(table, id) {
-    return new Promise((resolve, reject) => {
-        client.query(`DELETE FROM ${table} WHERE id=${id}`, (error, result) => {
-            if (error) {
-                return reject(error);
-            }else{
-                resolve(result);
-            }
-        })
-    });
-}
 
 module.exports = {
     select_all,
     select_where,
-    insert,
+    insert_user,
     update_by_param,
     delete_by_id,
 };
