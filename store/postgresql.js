@@ -1,4 +1,5 @@
 //NOTA: Esnecesario agregar el módulo que se encarga de abrir el Pool e implementarlo 
+const { mapJsonDataToFields } = require('./utils/db_functions');
 const { Client } = require('pg');
 const config = require('../config/index');
 
@@ -60,12 +61,11 @@ function delete_by_id(table, id) {
     });
 }
 
-function insert_user(table, data) {
+function insert(table, data) {
     return new Promise((resolve, reject) => {
-        const {email, password, role} = data;
+        const { tableFields, valuesFields } = mapJsonDataToFields(data);
         const query = {
-            text: `INSERT INTO ${table} (email, password, role) VALUES($1, $2, $3)`,
-            values: [email, role, password],
+            text: `INSERT INTO ${table} ${tableFields} VALUES ${valuesFields}`,
         }
         client.query(query,(error, result) => {
             if (error) {
@@ -93,7 +93,7 @@ function update_by_param(table, data) {
 module.exports = {
     select_all,
     select_where,
-    insert_user,
+    insert,
     update_by_param,
     delete_by_id,
 };

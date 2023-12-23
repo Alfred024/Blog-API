@@ -1,37 +1,30 @@
-const data = {
-	"email": "pamayin@gmail.com",
-	"password": "Abc34$",
-	"role": "NORMAL"
-}
-
 function mapJsonDataToFields(jsonData) {
     const keys = Object.keys(jsonData);
     const values = Object.values(jsonData); 
 
     let fields = `(${keys.join(', ')})`;
-    let fieldsValues = convertValuesToString(values);
+    let valuesFields = convertValuesToString(values);
 
     return {
         "tableFields": fields, //Retorna un String con el nombre de los campos 
-        "fieldsValues": fieldsValues, //Retorna un String con los valores de los campos,
-        "numOfField": values.length //Retorna la cantidad de parámetros que debe de declarar
+        "valuesFields": valuesFields, //Retorna un String con los valores de los campos,
     }
 }
 
 function convertValuesToString(valuesArray) {
-    let fieldsValues = '(';
+    let valuesFields = '(';
 
     valuesArray.forEach(value => {
         if(typeof value === 'string'){
-            fieldsValues += `'${value}',`
+            valuesFields += `'${value}',`
         }else{
-            fieldsValues += `${value},`
+            valuesFields += `${value},`
         }
     });
     
-    fieldsValues = fieldsValues.slice(0, -1);
-    fieldsValues += ')'
-    return fieldsValues;
+    valuesFields = valuesFields.slice(0, -1);
+    valuesFields += ')'
+    return valuesFields;
 }
 
 module.exports = {

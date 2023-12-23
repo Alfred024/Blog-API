@@ -23,16 +23,7 @@ async function get(req, res, next) {
 //Hacer las funciones de INSERT y UPDATE genéricas
 async function insert(req, res, next) {
     const table = req.params.table;
-    let data = {"data": "no data"};
-    switch (table) {
-        case 'user_blogger':
-            //console.log('INSERTING USER INFO');
-            data = await Store.insert_user(req.params.table, req.body)
-            break;
-        default:
-            data = {"message": `table ${table} dont exist`};;
-            break;
-    }
+    data = await Store.insert(table, req.body);
     res.send(`Rows affected: ${data.rowCount}`);
 }
 
