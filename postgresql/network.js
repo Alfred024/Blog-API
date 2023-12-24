@@ -28,8 +28,15 @@ async function insert(req, res, next) {
 
 async function update(req, res, next) {
     const data = await Store.update_by_param(req.params.table, req.body, req.params.id);
-    response.success(req, res, data, 200);
+    res.send(data);
 }
+
+// function update(req, res, next) {
+//     const data = {
+//         "update_fake": true, 
+//     };
+//     res.send(data);
+// }
 
 async function delete_by_id(req, res, next) {
     const data = await Store.delete_by_id(req.params.table, req.params.id);

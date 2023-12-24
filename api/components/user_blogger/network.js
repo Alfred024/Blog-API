@@ -49,4 +49,20 @@ router.post('/',
     }
 );
 
+router.put('/:id', 
+    validatorHandler(updateUserBloggerSchema, 'body'),
+    (req, res) =>{
+        const data = req.body;
+        const id = req.params.id;
+        Controller.update(data, id)
+            .then((data) =>{
+                console.log(data);
+                res.send(data);
+            })
+            .catch((err) =>{
+                console.log(err);
+            });
+    }
+);
+
 module.exports = router;

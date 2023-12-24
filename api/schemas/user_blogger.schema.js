@@ -6,8 +6,9 @@ const id = Joi.number();
 const email = Joi.string().email();
 //Modificar las características de la contrasñe de acuerdo a lo que diga el POU
 const password = Joi.string().min(6);
-//Este dato es una clase de enum, habría que pregunta a Uri cuál 
-const role = Joi.string().min(5);
+
+//Modificarlo para que sólo acepte "ADMIN" o "NORMAL"
+const role = Joi.string().min(5).uppercase();
 
 const getUserBloggerSchema = Joi.object({
     id: id.required(),

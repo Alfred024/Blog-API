@@ -23,9 +23,9 @@ function connectToRemoteDBService(host, port) {
         return req('POST', table, data);
     }
 
-    // function update(table, data) {
-    //     return req('PUT', table, data);
-    // }
+    function update(table, data) {
+        return req('PUT', table, data);
+    }
 
     function delete_by_id(table, id) {
         return req('DELETE', table, id);
@@ -43,6 +43,10 @@ function connectToRemoteDBService(host, port) {
 
         if ((method === 'GET' || method === 'DELETE') && data) {
             options.url += `/${data}`;
+        } else if (method === 'PUT'){
+            const {id, jsonData} = data;
+            options.url += `/${id}`;
+            options.data = jsonData;
         } else if (data) {
             options.data = data;
         }
@@ -59,7 +63,7 @@ function connectToRemoteDBService(host, port) {
         list,
         get,
         insert,
-        //update,
+        update,
         delete_by_id,
     };
 }

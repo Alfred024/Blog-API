@@ -1,4 +1,4 @@
-const { mapJsonDataToFields, mapJsonDataToFields_Update, mapJsonDataToFields_Insert } = require('./utils/db_functions');
+const { mapJsonDataToFields_Update, mapJsonDataToFields_Insert } = require('./utils/db_functions');
 const { Client } = require('pg');
 const config = require('../config/index');
 
@@ -38,7 +38,7 @@ function select_all(table) {
 
 function select_where(table, id) {
     return new Promise((resolve, reject) => {
-        client.query(`SELECT * FROM ${table} WHERE id=${id}`, (error, data) => {
+        client.query(`SELECT * FROM ${table} WHERE id_${table} = ${id}`, (error, data) => {
             if (error) {
                 return reject(error);
             }else{

@@ -21,9 +21,15 @@ module.exports = function (injectedStore) {
         return await store.insert(TABLE, data);
     }
 
+    async function update(data, id) {
+        const update_data = {"id": id, "jsonData": data};
+        return await store.update(TABLE, update_data);
+    }
+
     return {
         list,
         get,
         insert,
+        update,
     };
 }
