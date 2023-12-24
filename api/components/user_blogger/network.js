@@ -1,5 +1,6 @@
 const express = require('express');
-const validatorHandler = require('../../middlewares/validator.handler');
+//const validatorHandler = require('../../middlewares/validator.handler');
+const {validatorHandler, checkApiKey} = require('../../middlewares/middlewares');
 const { getUserBloggerSchema, createUserBloggerSchema, updateUserBloggerSchema } = require('../../schemas/user_blogger.schema');
 
 const Controller = require('./index');
@@ -50,6 +51,7 @@ router.post('/',
 );
 
 router.put('/:id', 
+    checkApiKey,
     validatorHandler(updateUserBloggerSchema, 'body'),
     (req, res) =>{
         const data = req.body;

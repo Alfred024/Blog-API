@@ -3,6 +3,7 @@ require('dotenv').config();
 module.exports = {
     api:{
         port: process.env.API_PORT || 3000,
+        api_key: process.env.API_KEY,
     },
     postgresql_service:{
         port: process.env.PG_SRV_PORT,
