@@ -48,18 +48,6 @@ function select_where(table, id) {
     })
 }
 
-function delete_by_id(table, id) {
-    return new Promise((resolve, reject) => {
-        client.query(`DELETE FROM ${table} WHERE id=${id}`, (error, result) => {
-            if (error) {
-                return reject(error);
-            }else{
-                resolve(result);
-            }
-        })
-    });
-}
-
 function insert(table, data) {
     return new Promise((resolve, reject) => {
         const { tableFields, valuesFields } = mapJsonDataToFields_Insert(data);
@@ -100,6 +88,17 @@ function update_by_param(table, data, id) {
     });
 }
 
+function delete_by_id(table, id) {
+    return new Promise((resolve, reject) => {
+        client.query(`DELETE FROM ${table} WHERE id_${table} = ${id}`, (error, result) => {
+            if (error) {
+                return reject(error);
+            }else{
+                resolve(result);
+            }
+        })
+    });
+}
 
 module.exports = {
     select_all,

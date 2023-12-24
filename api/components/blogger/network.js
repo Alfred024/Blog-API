@@ -65,4 +65,16 @@ router.put('/:id',
     }
 );
 
+router.delete('/:id', (req, res) =>{
+    const id = req.params.id;
+    Controller.delete_by_id(id)
+        .then((data) =>{
+            console.log(data);
+            res.send(data);
+        })
+        .catch((err) =>{
+            console.log(err);
+        });
+});
+
 module.exports = router;

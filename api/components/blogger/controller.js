@@ -25,10 +25,15 @@ module.exports = function (injectedStore) {
         return await store.update(TABLE, update_data);
     }
 
+    async function delete_by_id(id) {
+        return await store.delete_by_id(TABLE, id);
+    }
+
     return {
         list,
         get,
         insert,
         update,
+        delete_by_id,
     };
 }
