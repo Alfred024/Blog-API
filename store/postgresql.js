@@ -1,5 +1,4 @@
-//NOTA: Esnecesario agregar el módulo que se encarga de abrir el Pool e implementarlo 
-const { mapJsonDataToFields } = require('./utils/db_functions');
+const { mapJsonDataToFields, mapJsonDataToFields_Update, mapJsonDataToFields_Insert } = require('./utils/db_functions');
 const { Client } = require('pg');
 const config = require('../config/index');
 
@@ -22,7 +21,7 @@ function handleCon() {
 }
 handleCon();
 
-//GENERIC FUNCTIONS
+
 function select_all(table) {
     return new Promise((resolve, reject) =>{
         client.query(`SELECT * FROM ${table}`, (error, data) =>{
@@ -63,7 +62,7 @@ function delete_by_id(table, id) {
 
 function insert(table, data) {
     return new Promise((resolve, reject) => {
-        const { tableFields, valuesFields } = mapJsonDataToFields(data);
+        const { tableFields, valuesFields } = mapJsonDataToFields_Insert(data);
         const query = {
             text: `INSERT INTO ${table} ${tableFields} VALUES ${valuesFields}`,
         }
@@ -77,16 +76,28 @@ function insert(table, data) {
     })
 }
 
-function update_by_param(table, data) {
+function update_by_param(table, data, id) {
     return new Promise((resolve, reject) => {
-        client.query(`UPDATE ${table} SET ? WHERE id=?`, [data, data.id], (error, result) => {
+        const { fieldName, fieldNewValue } = mapJsonDataToFields_Update(data);
+        let query;
+        if (typeof fieldNewValue === 'string'){
+            query = {
+                text: `UPDATE ${table} SET ${fieldName} = '${fieldNewValue}' WHERE id_${table} = ${id}`
+            }
+        }else{
+            query = {
+                text: `UPDATE ${table} SET ${fieldName} = ${fieldNewValue} WHERE id_${table} = ${id}`
+            }
+        }
+        
+        client.query(query, (error, result) => {
             if (error) {
                 return reject(error);
             }else{
                 resolve(result);
             }
-        })
-    })
+        });
+    });
 }
 
 

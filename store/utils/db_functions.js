@@ -1,4 +1,4 @@
-function mapJsonDataToFields(jsonData) {
+function mapJsonDataToFields_Insert(jsonData) {
     const keys = Object.keys(jsonData);
     const values = Object.values(jsonData); 
 
@@ -15,11 +15,7 @@ function convertValuesToString(valuesArray) {
     let valuesFields = '(';
 
     valuesArray.forEach(value => {
-        if(typeof value === 'string'){
-            valuesFields += `'${value}',`
-        }else{
-            valuesFields += `${value},`
-        }
+        valuesFields += evaluateTypeOfData(value)+',';
     });
     
     valuesFields = valuesFields.slice(0, -1);
@@ -27,6 +23,25 @@ function convertValuesToString(valuesArray) {
     return valuesFields;
 }
 
+function evaluateTypeOfData(value) {
+    if(typeof value === 'string'){
+        return `'${value}'`
+    }else{
+        return `${value}`
+    }
+}
+
+function mapJsonDataToFields_Update(jsonData) {
+    const fieldName = Object.keys(jsonData);
+    const fieldNewValue = Object.values(jsonData);
+
+    return {
+        "fieldName": fieldName[0], //Retorna el nombre del campo a modificar
+        "fieldNewValue": fieldNewValue[0], //Retorna el nuevo valor del campo 
+    }
+}
+
 module.exports = {
-    mapJsonDataToFields,
+    mapJsonDataToFields_Insert,
+    mapJsonDataToFields_Update,
 }
