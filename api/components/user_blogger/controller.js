@@ -9,7 +9,6 @@ module.exports = function (injectedStore) {
     }
 
     async function list() {
-        console.log('getting data from store');
         return await store.list(TABLE);
     }
 

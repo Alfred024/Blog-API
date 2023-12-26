@@ -1,5 +1,5 @@
 const express = require('express');
-//const validatorHandler = require('../../middlewares/validator.handler');
+const bcrypt = require('bcrypt');
 const {validatorHandler, checkApiKey} = require('../../middlewares/middlewares');
 const { getUserBloggerSchema, createUserBloggerSchema, updateUserBloggerSchema } = require('../../schemas/user_blogger.schema');
 
@@ -37,8 +37,9 @@ router.get('/:id',
 
 router.post('/', 
     validatorHandler(createUserBloggerSchema, 'body'),
-    (req, res)=>{
-        const data = req.body;
+    async (req, res) =>{
+        let data = req.body;
+        data.password = await bcrypt.hash(data.password, 5);
         Controller.insert(data)
             .then((data) =>{
                 console.log(data);

@@ -45,6 +45,18 @@ function select_where(table, id) {
                 resolve(data.rows);
             }
         })
+    });
+}
+
+function select_user_blogger_by_email(table, email) {
+    return new Promise((resolve, reject) => {
+        client.query(`SELECT * FROM ${table} WHERE email = '${email}'`, (error, data) => {
+            if (error) {
+                return reject(error);
+            }else{
+                resolve(data.rows);
+            }
+        })
     })
 }
 
@@ -103,6 +115,7 @@ function delete_by_id(table, id) {
 module.exports = {
     select_all,
     select_where,
+    select_user_blogger_by_email,
     insert,
     update_by_param,
     delete_by_id,

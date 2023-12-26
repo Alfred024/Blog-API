@@ -2,10 +2,10 @@
 //Provee los métodos al Controller del componente en la API
 
 //Use this import if youre using node to run the API
-const axios = require('axios');
+//const axios = require('axios');
 
 //Use this import if youre using npx nodemon to run the API
-//const axios = require('axios/dist/node/axios.cjs');
+const axios = require('axios/dist/node/axios.cjs');
 
 
 function connectToRemoteDBService(host, port) {
@@ -42,6 +42,9 @@ function connectToRemoteDBService(host, port) {
         };
 
         if ((method === 'GET' || method === 'DELETE') && data) {
+            if ((data).includes('@')){
+                options.url += `/email`;
+            }
             options.url += `/${data}`;
         } else if (method === 'PUT'){
             const {id, jsonData} = data;
