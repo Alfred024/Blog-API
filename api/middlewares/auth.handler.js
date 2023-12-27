@@ -9,4 +9,15 @@ function checkApiKey(req, res, next) {
     }
 }
 
-module.exports = checkApiKey;
+function checkRoles(...roles) {
+    return (req, res, next) =>{
+        const user = req.user;
+        if(roles.includes(user.role)){
+            next();
+        }else{
+            throw Error(`Only roles:${roles} can do this action`)
+        }
+    }
+}
+
+module.exports = {checkApiKey, checkRoles};

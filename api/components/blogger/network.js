@@ -1,5 +1,5 @@
 const express = require('express');
-const validatorHandler = require('../../middlewares/validator.handler');
+const {validatorHandler} = require('../../middlewares/validator.handler');
 const { getBloggerSchema, createBloggerSchema, updateBloggerSchema } = require('../../schemas/blogger.schema');
 
 const Controller = require('./index');

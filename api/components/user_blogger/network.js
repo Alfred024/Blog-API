@@ -1,6 +1,8 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const {validatorHandler, checkApiKey} = require('../../middlewares/middlewares');
+const {validatorHandler} = require('../../middlewares/validator.handler');
+const {checkApiKey} = require('../../middlewares/auth.handler');
+
 const { getUserBloggerSchema, createUserBloggerSchema, updateUserBloggerSchema } = require('../../schemas/user_blogger.schema');
 
 const Controller = require('./index');

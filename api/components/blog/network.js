@@ -1,5 +1,7 @@
 const express = require('express');
-const {validatorHandler} = require('../../middlewares/middlewares');
+const passport = require('passport');
+const {validatorHandler} = require('../../middlewares/validator.handler');
+const {checkRoles} = require('../../middlewares/auth.handler');
 const { getBlogSchema, createBlogSchema, updateBlogSchema } = require('../../schemas/blog.schema');
 
 const Controller = require('./index');
@@ -34,19 +36,26 @@ router.get('/:id',
     }
 );
 
+//Arreglar el registro automático en la base de datos de los campos de tipo fecha
 router.post('/', 
+    passport.authenticate('jwt', {session: false}),
+    checkRoles('ADMIN', 'NORMAL'),
     validatorHandler(createBlogSchema, 'body'),
-    async (req, res) =>{
-        const data = req.body;
-        Controller.insert(data)
-            .then((data) =>{
-                console.log(data);
-                res.send(data);
-            })
-            .catch((err) =>{
-                console.log(err);
-            });
+    (req, res) =>{
+        console.log('Creation of a post.Authorized because send of token');
+        res.send('Authorized to post a blog');
     }
+    // async (req, res) =>{
+    //     const data = req.body;
+    //     Controller.insert(data)
+    //         .then((data) =>{
+    //             console.log(data);
+    //             res.send(data);
+    //         })
+    //         .catch((err) =>{
+    //             console.log(err);
+    //         });
+    // }
 );
 
 router.put('/:id', 
