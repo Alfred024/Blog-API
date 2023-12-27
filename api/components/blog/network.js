@@ -8,20 +8,6 @@ const Controller = require('./index');
 
 const router = express.Router();
 
-router.get('/', 
-    validatorHandler(getBlogSchema, 'param'),
-    (req, res)=>{
-        Controller.list()
-            .then((data) =>{
-                console.log(data);
-                res.send(data);
-            })
-            .catch((err) =>{
-                console.log(err);
-            });
-    }
-);
-
 router.get('/:id', 
     (req, res)=>{
         const id = req.params.id;

@@ -41,10 +41,18 @@ function connectToRemoteDBService(host, port) {
             },
         };
 
+        //La evaluación de casos debería ser genérica
         if ((method === 'GET' || method === 'DELETE') && data) {
-            if ((data).includes('@')){
-                options.url += `/email`;
+            if(typeof data === 'number'){
+                if (table === 'blogger'){
+                    options.url += `/my-blogs`;
+                }
+            }else{
+                if ((data).includes('@')){
+                    options.url += `/email`;
+                }
             }
+        
             options.url += `/${data}`;
         } else if (method === 'PUT'){
             const {id, jsonData} = data;
@@ -52,7 +60,7 @@ function connectToRemoteDBService(host, port) {
             options.data = jsonData;
         } else if (data) {
             options.data = data;
-        }
+        }  
 
         return axios(options)
             .then((response) => response.data)

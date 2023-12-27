@@ -48,6 +48,22 @@ function select_where(table, id) {
     });
 }
 
+function select_join_blog_and_blogger(table, id) {
+    const query = {text: `
+    SELECT * FROM blog bl
+        JOIN ${table} blr ON bl.id_blogger = blr.id_blogger
+        WHERE bl.id_blogger = ${id};`}
+    return new Promise((resolve, reject) => {
+        client.query(query,(error, data) => {
+            if (error) {
+                return reject(error);
+            }else{
+                resolve(data.rows);
+            }
+        })
+    });
+}
+
 function select_user_blogger_by_email(table, email) {
     return new Promise((resolve, reject) => {
         client.query(`SELECT * FROM ${table} WHERE email = '${email}'`, (error, data) => {
@@ -115,6 +131,7 @@ function delete_by_id(table, id) {
 module.exports = {
     select_all,
     select_where,
+    select_join_blog_and_blogger,
     select_user_blogger_by_email,
     insert,
     update_by_param,

@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 const {validatorHandler} = require('../../middlewares/validator.handler');
 const { getBloggerSchema, createBloggerSchema, updateBloggerSchema } = require('../../schemas/blogger.schema');
 
@@ -19,11 +20,12 @@ router.get('/',
     }
 );
 
-router.get('/:id', 
-    validatorHandler(getBloggerSchema, 'params'),
+router.get('/my-blogs', 
+    passport.authenticate('jwt', {session: false}),
+
     (req, res)=>{
-        const id = req.params.id;
-        Controller.get(id)
+        const {sub} = req.user;
+        Controller.get(sub)
             .then((data) =>{
                 console.log(data);
                 res.send(data);
