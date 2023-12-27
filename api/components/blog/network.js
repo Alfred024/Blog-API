@@ -1,12 +1,13 @@
 const express = require('express');
-const validatorHandler = require('../../middlewares/validator.handler');
-const { getBloggerSchema, createBloggerSchema, updateBloggerSchema } = require('../../schemas/blogger.schema');
+const {validatorHandler} = require('../../middlewares/middlewares');
+const { getBlogSchema, createBlogSchema, updateBlogSchema } = require('../../schemas/blog.schema');
 
 const Controller = require('./index');
 
 const router = express.Router();
 
 router.get('/', 
+    validatorHandler(getBlogSchema, 'param'),
     (req, res)=>{
         Controller.list()
             .then((data) =>{
@@ -20,7 +21,6 @@ router.get('/',
 );
 
 router.get('/:id', 
-    validatorHandler(getBloggerSchema, 'params'),
     (req, res)=>{
         const id = req.params.id;
         Controller.get(id)
@@ -35,8 +35,8 @@ router.get('/:id',
 );
 
 router.post('/', 
-    validatorHandler(createBloggerSchema, 'body'),
-    (req, res)=>{
+    validatorHandler(createBlogSchema, 'body'),
+    async (req, res) =>{
         const data = req.body;
         Controller.insert(data)
             .then((data) =>{
@@ -50,7 +50,7 @@ router.post('/',
 );
 
 router.put('/:id', 
-    validatorHandler(updateBloggerSchema, 'body'),
+    validatorHandler(updateBlogSchema, 'body'),
     (req, res) =>{
         const data = req.body;
         const id = req.params.id;

@@ -6,16 +6,18 @@ const swaggerDocs = require('./swagger/network');
 const user = require('./components/user_blogger/network');
 const blogger = require('./components/blogger/network');
 const auth = require('./components/auth/network');
+const blog = require('./components/blog/network');
 
 app.use(express.json());
 
 //Auth Strategies
-//require('./auth/index');
+require('./auth/index');
 
 //Routes components
 app.use('/api/user_blogger', user);
 app.use('/api/blogger', blogger);
 app.use('/api/auth', auth);
+app.use('/api/blog', blog);
 
 app.use('/api-docs', swaggerDocs);
 
