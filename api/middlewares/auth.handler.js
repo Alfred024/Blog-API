@@ -20,4 +20,18 @@ function checkRoles(...roles) {
     }
 }
 
-module.exports = {checkApiKey, checkRoles};
+
+function checkOwner() {
+    return (req, res, next) =>{
+        const user = req.user;
+        console.log(user);
+        if(user.sub == req.params.id){
+            next();
+        }else{
+            throw Error(`You are not the owner of that user`)
+        }
+    }
+}
+
+
+module.exports = {checkApiKey, checkRoles, checkOwner};

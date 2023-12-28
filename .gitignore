@@ -18,3 +18,5 @@ jspm_packages/
 .env
 .env.test
 .env.production
+
+.txt

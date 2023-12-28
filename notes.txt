@@ -1,0 +1,27 @@
+BLOG API 
+
+* Documentar endpoints
+* Implementar Pool connection en las peticiones HTTP de axios
+* Guardar el JWT para matener sesión (cookie)
+* Función para agregar el Bearer token en la request
+* Función refreshToken 
+
+* Manejar despliegue de información de error
+* IMplemenar PM2 para microservicios
+* Crear SEED para crear datos
+
+
+
+Mostrar enums en una B.D´s de postgres
+select n.nspname as enum_schema,  
+       t.typname as enum_name,  
+       e.enumlabel as enum_value
+from pg_type t 
+   join pg_enum e on t.oid = e.enumtypid  
+   join pg_catalog.pg_namespace n ON n.oid = t.typnamespace
+
+
+//DUDA: Los blogger y los user_blogger siempretendrán el mimso ID? o habrá casos en los que no 
+select * from blog bl
+join blogger blr on bl.id_blogger = blr.id_blogger
+where bl.id_blogger = ${p_id};
