@@ -44,7 +44,7 @@ function connectToRemoteDBService(host, port) {
         //La evaluación de casos debería ser genérica
         if ((method === 'GET' || method === 'DELETE') && data) {
             if(typeof data === 'number'){
-                // La data debería ser un json con el nombre del componente y el id a verificar
+                // La data debería ser un json con el nombre del componente/tabla y el id a verificar
                 if (table === 'blogger'){
                     options.url += `/my-blogs`;
                 }

@@ -20,11 +20,9 @@ function checkRoles(...roles) {
     }
 }
 
-
 function checkOwner() {
     return (req, res, next) =>{
         const user = req.user;
-        console.log(user);
         if(user.sub == req.params.id){
             next();
         }else{
@@ -32,6 +30,8 @@ function checkOwner() {
         }
     }
 }
+
+//Función que primero revise si es el dueño, si no, que revise que es 'ADMIN'
 
 
 module.exports = {checkApiKey, checkRoles, checkOwner};

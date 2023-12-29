@@ -3,15 +3,13 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const {validatorHandler} = require('../../middlewares/validator.handler');
-const {checkApiKey, checkRoles, checkOwner} = require('../../middlewares/auth.handler');
+const { checkRoles, checkOwner } = require('../../middlewares/auth.handler');
 
 const { getUserBloggerSchema, createUserBloggerSchema, updateUserBloggerSchema } = require('../../schemas/user_blogger.schema');
 
 const Controller = require('./index');
 
-//get/delete/put --> proteger pidiendo:
 // Implementar que aunque no sea el owner, si el usuario es 'ADMIN' pueda hacer CRUD
- 
 router.get('/', passport.authenticate('jwt', {session:false}), checkRoles('ADMIN'), get);
 router.get('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), validatorHandler(getUserBloggerSchema, 'params'), get_by_id);
 router.post('/', validatorHandler(createUserBloggerSchema, 'body'), post);

@@ -7,6 +7,7 @@ const user = require('./components/user_blogger/network');
 const blogger = require('./components/blogger/network');
 const auth = require('./components/auth/network');
 const blog = require('./components/blog/network');
+const career = require('./components/career/network');
 
 app.use(express.json());
 
@@ -18,6 +19,7 @@ app.use('/api/user_blogger', user);
 app.use('/api/blogger', blogger);
 app.use('/api/auth', auth);
 app.use('/api/blog', blog);
+app.use('/api/career', career)
 
 app.use('/api-docs', swaggerDocs);
 
