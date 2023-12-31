@@ -31,7 +31,13 @@ async function get(req, res, next) {
 
 async function get_my_blogs(req, res, next) {
     const {sub} = req.user;
-    Controller.get(sub)
+    // const data = {
+    //     "main_table": "blog",
+    //     "secondary_table": "blogger",
+    //     "id_secondary_table": "id_blogger",
+    //     "id": sub
+    // };
+    Controller.get(data)
         .then((data) =>{
             console.log(data);
             res.send(data);
