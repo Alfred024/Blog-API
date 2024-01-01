@@ -6,7 +6,7 @@
 
 //Use this import if youre using npx nodemon to run the API
 const axios = require('axios/dist/node/axios.cjs');
-
+const { evalueateMethod } = require('./utils/remote_http_functions');
 
 function connectToRemoteDBService(host, port) {
     const baseURL = `http://${host}:${port}`;
@@ -15,8 +15,8 @@ function connectToRemoteDBService(host, port) {
         return req('GET', table);
     }
 
-    function get(table, id) {
-        return req('GET', table, id);
+    function get(table, data) {
+        return req('GET', table, data);
     }
 
     function insert(table, data) {
@@ -40,29 +40,10 @@ function connectToRemoteDBService(host, port) {
                 'Content-Type': 'application/json',
             },
         };
-
-        //La evaluación de casos debería ser genérica
-        if ((method === 'GET' || method === 'DELETE') && data) {
-            if(typeof data === 'number'){
-                // La data debería ser un json con el nombre del componente/tabla y el id a verificar
-                if (table === 'blogger'){
-                    options.url += `/my-blogs`;
-                }
-            }else{
-                if ((data).includes('@')){
-                    options.url += `/email`;
-                }
-            }
+        const {newUrl, newOptions} = evalueateMethod(method, url, options, data);
+        options = newOptions;
+        options.url = newUrl;
         
-            options.url += `/${data}`;
-        } else if (method === 'PUT'){
-            const {id, jsonData} = data;
-            options.url += `/${id}`;
-            options.data = jsonData;
-        } else if (data) {
-            options.data = data;
-        }  
-
         return axios(options)
             .then((response) => response.data)
             .catch((error) => {

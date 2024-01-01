@@ -48,11 +48,13 @@ function select_where(table, id) {
     });
 }
 
-function select_join_blog_and_blogger(table, id) {
+function select_join(jsonData) {
+    const { main_table, secondary_table, id_secondary_table, id } = jsonData;
     const query = {text: `
-    SELECT * FROM blog bl
-        JOIN ${table} blr ON bl.id_blogger = blr.id_blogger
-        WHERE bl.id_blogger = ${id};`}
+    SELECT * FROM ${main_table}
+    JOIN ${secondary_table} ON ${main_table}.${id_secondary_table} = ${secondary_table}.${id_secondary_table}
+    WHERE ${main_table}.${id_secondary_table} = ${id};`}
+
     return new Promise((resolve, reject) => {
         client.query(query,(error, data) => {
             if (error) {
@@ -64,9 +66,11 @@ function select_join_blog_and_blogger(table, id) {
     });
 }
 
-function select_user_blogger_by_email(table, email) {
+//Arreglar el param_value, para ver si es un string o no
+function select_by_param_name(jsonData) {
+    const {table, param_name, param_value} = jsonData;
     return new Promise((resolve, reject) => {
-        client.query(`SELECT * FROM ${table} WHERE email = '${email}'`, (error, data) => {
+        client.query(`SELECT * FROM ${table} WHERE ${param_name} = '${param_value}'`, (error, data) => {
             if (error) {
                 return reject(error);
             }else{
@@ -131,8 +135,8 @@ function delete_by_id(table, id) {
 module.exports = {
     select_all,
     select_where,
-    select_join_blog_and_blogger,
-    select_user_blogger_by_email,
+    select_join,
+    select_by_param_name,
     insert,
     update_by_param,
     delete_by_id,

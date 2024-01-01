@@ -14,7 +14,7 @@ router.get('/', passport.authenticate('jwt', {session:false}), checkRoles('ADMIN
 router.get('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), validatorHandler(getUserBloggerSchema, 'params'), get_by_id);
 router.post('/', validatorHandler(createUserBloggerSchema, 'body'), post);
 router.put('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), validatorHandler(updateUserBloggerSchema, 'body'), put);
-router.delete('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), delete_by_id);
+router.delete('/:id', passport.authenticate('jwt', {session:false}), delete_by_id);
 
 async function get(req, res, next) {
     Controller.list()

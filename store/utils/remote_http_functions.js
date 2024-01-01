@@ -1,53 +1,65 @@
 function evalueateMethod(method, baseUrl, options, data) {
-
-    //Este URL ya trae el nombre de una tabla
     let url = baseUrl;
+    let newOptions = options;
 
     if((method === 'POST') || (method === 'PUT') || (method === 'DELETE')){
-        if(method !== 'DELETE'){
-            options.data = data;
+        if(method === 'POST'){
+            newOptions.data = data;
         }
 
-        if((method === 'PUT') || (method === 'DELETE')){
-            const { id } = data;
-            baseUrl += `/${id}`;
-        }   
+        if(method === 'DELETE'){
+            const id = data;
+            url += `/${id}`;
+        }
+        
+        if(method === 'PUT'){
+            const { id, jsonData } = data;
+            url += `/${id}`;
+            newOptions.data = jsonData;
+        }
     }else{
         if(data){
-            const jsonLenght = Object.keys(data).length;
-            //caso 1: el lenght es 0 (get by id)
-            if(jsonLenght === 0){
-                const { id } = data;
-                baseUrl += `/${id}`;
-            }
-            else {
+            if(typeof data === 'string'){
+                const id = data;
+                url += `/${id}`;
+            }else {
                 //caso 2: el lenght es 2 (get en base a el valor de un campo de la tabla)
-                if(jsonLenght === 2){
-                    const { param_name, param_value } = data;
-                    const data = {
+                const jsonLenght = Object.keys(data).length;
+                let jsonData;
+
+                if(jsonLenght === 3){
+                    const { table, param_name, param_value } = data;
+                    jsonData = {
+                        "table": table,
                         "param_name": param_name,
                         "param_value": param_value,
                     };
+                    url += `/${param_name}/${param_value}`;
                 }
 
                 //caso 3: el length es 4 (es un get que involucra a 2 tablas/JOIN)
                 else{
-                    const { table_main, table_secondary, id_table_secondary, id } = data;
-                    const data = {
-                        "table_main": table_main, 
-                        "table_secondary": table_secondary, 
-                        "id_table_secondary": id_table_secondary, 
+                    const { endpoint, main_table, secondary_table, id_secondary_table, id } = data;
+                    jsonData = {
+                        "endpoint": endpoint,
+                        "main_table": main_table, 
+                        "secondary_table": secondary_table, 
+                        "id_secondary_table": id_secondary_table, 
                         "id": id,
                     };
+                    url += `/${endpoint}/${id}`
                 }
-
-                options.data = data;
+                newOptions.data = jsonData;
             }
         }
     }
 
     return {
-        "data": options.data,
-        "url": url,
+        "newOptions": newOptions,
+        "newUrl": url,
     }
+}
+
+module.exports = {
+    evalueateMethod, 
 }

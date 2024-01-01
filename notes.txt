@@ -1,14 +1,16 @@
 BLOG API 
 
-* Documentar endpoints
-* Implementar Pool connection en las peticiones HTTP de axios
+MUST
+* Implementar Pool connection en las peticiones HTTP de axios/en el archivo de las funciones de Postgres
 * Guardar el JWT para matener sesión (cookie)
 * Función para agregar el Bearer token en la request
-* Función refreshToken 
-
 * Manejar despliegue de información de error
+
+SHOULD 
+* Documentar endpoints
 * IMplemenar PM2 para microservicios
 * Crear SEED para crear datos
+* Función refreshToken 
 
 
 

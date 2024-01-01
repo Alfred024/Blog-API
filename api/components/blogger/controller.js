@@ -12,8 +12,8 @@ module.exports = function (injectedStore) {
         return await store.list(TABLE);
     }
 
-    async function get(id) {
-        return await store.get(TABLE, id);
+    async function get(data) {
+        return await store.get(TABLE, data);
     }
     
     async function insert(data){

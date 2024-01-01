@@ -7,8 +7,8 @@ module.exports = function (injectedStore) {
         return;
     }
 
-    async function get_user_blogger_by_email(email) {
-        return await store.get(TABLE, email);
+    async function get_user_blogger_by_email(data) {
+        return await store.get(TABLE, data);
     }
 
     return {

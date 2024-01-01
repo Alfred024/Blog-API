@@ -6,11 +6,13 @@ const router = express.Router();
 
 router.get('/:table', list);
 router.get('/:table/:id', get);
+//Select JOIN (params: 2 tables, 1 param)
 router.get('/:table/my-blogs/:id', get_blogs_of_blogger);
+//Select BY param (email)
 router.get('/:table/email/:email', get_user_blogger_by_email);
 router.post('/:table', insert);
 router.put('/:table/:id', update);
-router.delete('/:table/:id', delete_by_id)
+router.delete('/:table/:id', delete_by_id);
 
 async function list(req, res, next) {
     const data = await Store.select_all(req.params.table);
@@ -23,12 +25,13 @@ async function get(req, res, next) {
 }
 
 async function get_blogs_of_blogger(req, res, next) {
-    const data = await Store.select_join_blog_and_blogger(req.params.table, req.params.id);
+    //const data = await Store.select_join_blog_and_blogger(req.params.table, req.params.id);
+    const data = await Store.select_join(req.body);
     res.send(data);
 }
 
 async function get_user_blogger_by_email(req, res, next) {
-    const data = await Store.select_user_blogger_by_email(req.params.table, req.params.email);
+    const data = await Store.select_by_param_name(req.body);
     res.send(data);
 }
 
