@@ -13,9 +13,14 @@ const createCareerSchema = Joi.object({
     name: name.required(),
 });
 
-const updateCareerSchema = Joi.object({
+const putCareerSchema = Joi.object({
     key: key,
     name: name,
 });
 
-module.exports = { getCareerSchema, createCareerSchema, updateCareerSchema };
+const patchCareerSchema = Joi.object({
+    key: key,
+    name: name,
+});
+
+module.exports = { getCareerSchema, createCareerSchema, putCareerSchema, patchCareerSchema };

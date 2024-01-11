@@ -19,11 +19,18 @@ const createBloggerSchema = Joi.object({
     id_career: id_career.required(),
 });
 
-const updateBloggerSchema = Joi.object({
+const  putBloggerSchema = Joi.object({
+    name: name.required(),
+    first_username: first_username.required(),
+    second_username: second_username.required(),
+    id_career: id_career.required(),
+});
+
+const patchBloggerSchema = Joi.object({
     name: name,
     first_username: first_username,
     second_username: second_username,
     id_career: id_career,
 });
 
-module.exports = { getBloggerSchema, createBloggerSchema, updateBloggerSchema };
+module.exports = { getBloggerSchema, createBloggerSchema, putBloggerSchema, patchBloggerSchema };

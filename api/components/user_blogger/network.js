@@ -51,7 +51,6 @@ async function post(req, res, next) {
         });
 }
 
-//El put es para actualizar todo
 async function put(req, res, next) {
     let data = req.body;
     data.password = await bcrypt.hash(data.password, 5);
@@ -66,7 +65,6 @@ async function put(req, res, next) {
         });
 }
 
-// Es para actualizar parcialmente 
 async function patch(req, res, next) {
     let data = req.body;
 

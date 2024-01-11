@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const {validatorHandler} = require('../../middlewares/validator.handler');
-const { getCareerSchema, createCareerSchema, updateCareerSchema } = require('../../schemas/career.schema');
+const { getCareerSchema, createCareerSchema, putCareerSchema, patchCareerSchema } = require('../../schemas/career.schema');
 const { checkRoles } = require('../../middlewares/auth.handler');
 
 
@@ -12,7 +12,8 @@ const router = express.Router();
 router.get('/', get);
 router.get('/:id', validatorHandler(getCareerSchema, 'params'), get_by_id);
 router.post('/', passport.authenticate('jwt', {session:false}), checkRoles('ADMIN'), validatorHandler(createCareerSchema, 'body'), post);
-router.put('/:id', passport.authenticate('jwt', {session:false}), checkRoles('ADMIN'), validatorHandler(updateCareerSchema, 'body'), put);
+router.put('/:id', passport.authenticate('jwt', {session:false}), checkRoles('ADMIN'), validatorHandler(putCareerSchema, 'body'), put);
+router.patch('/:id', passport.authenticate('jwt', {session:false}), checkRoles('ADMIN'), validatorHandler(patchCareerSchema, 'body'), put);
 router.delete('/:id', passport.authenticate('jwt', {session:false}), checkRoles('ADMIN'), delete_by_id);
 
 async function get(req, res, next) {

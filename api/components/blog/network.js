@@ -2,7 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const {validatorHandler} = require('../../middlewares/validator.handler');
 const {checkRoles, checkOwner} = require('../../middlewares/auth.handler');
-const { getBlogSchema, createBlogSchema, updateBlogSchema } = require('../../schemas/blog.schema');
+const { getBlogSchema, createBlogSchema, putBlogSchema, patchBlogSchema, } = require('../../schemas/blog.schema');
 
 const Controller = require('./index');
 
@@ -11,7 +11,8 @@ const router = express.Router();
 router.get('/', passport.authenticate('jwt', {session:false}), get);
 router.get('/:id', passport.authenticate('jwt', {session:false}), validatorHandler(getBlogSchema, 'params'), get_by_id);
 router.post('/', passport.authenticate('jwt', {session:false}), validatorHandler(createBlogSchema, 'body'), post);
-router.put('/:id', passport.authenticate('jwt', {session:false}), validatorHandler(updateBlogSchema, 'body'),checkOwner(), put);
+router.put('/:id', passport.authenticate('jwt', {session:false}), validatorHandler(putBlogSchema, 'body'),checkOwner(), put);
+router.put('/:id', passport.authenticate('jwt', {session:false}), validatorHandler(patchBlogSchema, 'body'),checkOwner(), put);
 router.delete('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), delete_by_id);
 
 async function get(req, res, next) {
