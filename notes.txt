@@ -29,7 +29,8 @@ Tareas para los D.B.A´s:
 1.- Crear triggers para cuando se haga algún delete
 2.- Crear la tabla que guarde la información generada por el trigger
 3.- Manejar que en la D.B. se ingrese los datos de tipo fecha automáticamente. http://localhost:3000/api/blogger/
-4.- Agregar los delte on cascade 
+4.- Agregar los delete on cascade 
+
 
 ---Usuarios de prueba---
 //role: NORMAL
@@ -37,9 +38,22 @@ Tareas para los D.B.A´s:
 	"email": "testuser@gmail.com",
 	"password": "TestUser12$",
 }
+{
+	"email": "testuser3@gmail.com",
+	"password": "TestUser3$",
+}
 
 //role: ADMIN
 {
 	"email": "testuser2@gmail.com",
 	"password": "TestUser12$",
 }
+	{
+		"id_blogger": 1,
+		"name": "testuser2@gmail.com",
+		"first_username": "TestUser12$",
+		"second_username": "ADMIN",
+		"id_career": 1,
+		"id_user_blogger": 4
+	}
+

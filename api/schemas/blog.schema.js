@@ -1,6 +1,8 @@
 const Joi = require('joi');
 
 const id = Joi.number();
+//const date_last_change = Joi.date();
+//const date_publication = Joi.date();
 const content = Joi.string();
 //const id_blogger = Joi.number();
 const title = Joi.string().max(200);
@@ -14,7 +16,10 @@ const getBlogSchema = Joi.object({
 
 const createBlogSchema = Joi.object({
     content: content.required(),
+    //date_last_change: date_last_change.required(),
+    //date_publication: date_publication.required(),
     //id_blogger: id_blogger.required(),
+    //id_blog: id.required(),
     title: title.required(),
     slug: slug.required(),
     description: description.required(),

@@ -15,6 +15,10 @@ module.exports = function (injectedStore) {
     async function get(id) {
         return await store.get(TABLE, id);
     }
+
+    async function get_blogger(data) {
+        return await store.get(TABLE, data);
+    }
     
     async function insert(data){
         return await store.insert(TABLE, data);
@@ -32,6 +36,7 @@ module.exports = function (injectedStore) {
     return {
         list,
         get,
+        get_blogger,
         insert,
         update,
         delete_by_id,

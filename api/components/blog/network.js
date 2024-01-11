@@ -36,19 +36,36 @@ async function get_by_id(req, res, next) {
 }
 
 
-//Arreglar el registro automático en la base de datos de los campos de tipo fecha
 async function post(req, res, next) {
     const data = req.body;
-    data.id_blogger = req.user.sub;
-    res.send(data);
-    // Controller.insert(data)
-    //     .then((data) =>{
-    //         console.log(data);
-    //         res.send(data);
-    //     })
-    //     .catch((err) =>{
-    //         console.log(err);
-    //     });
+    let id_user_blogger;
+    const joinData = {
+        "endpoint": "my-blogs",
+        "main_table": "blogger",
+        "secondary_table": "user_blogger",
+        "id_secondary_table": "id_user_blogger",
+        "id": req.user.sub,
+    };
+    await Controller.get_blogger(joinData)
+        .then((blogger) =>{
+            id_user_blogger = blogger[0].id_blogger;
+            console.log('id del blogger: '+id_user_blogger);
+        })
+        .catch((err) =>{
+            console.log(err);
+        });
+
+    data.id_blogger = id_user_blogger;
+    data.date_last_change = new Date().toISOString();
+    data.date_publication = new Date().toISOString();
+
+    Controller.insert(data)
+        .then((data) =>{
+            res.send(data);
+        })
+        .catch((err) =>{
+            console.log(err);
+        });
 }
 
 async function put(req, res, next) {
