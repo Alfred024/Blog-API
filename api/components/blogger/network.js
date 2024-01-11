@@ -11,11 +11,12 @@ const router = express.Router();
 
 // Implementar que aunque no sea el owner, si el usuario es 'ADMIN' pueda hacer un put o delete
 
-//Proteger la respuesta de el método get para que no muestre las contraseñas
 router.get('/', passport.authenticate('jwt', {session:false}), get);
 router.get('/my-blogs', passport.authenticate('jwt', {session:false}), get_my_blogs);
-router.post('/', validatorHandler(createBloggerSchema, 'body'), post);
-router.put('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), validatorHandler(updateBloggerSchema, 'body'), put);
+router.post('/', validatorHandler(createBloggerSchema, 'body'), passport.authenticate('jwt', {session:false}), post);
+// TODO: Agregar la función de validar si el usuario user_blogger es propietario del bolgger, si no, que no pueda editar
+//router.put('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), validatorHandler(updateBloggerSchema, 'body'), put);
+router.put('/:id', passport.authenticate('jwt', {session:false}), validatorHandler(updateBloggerSchema, 'body'), put);
 router.delete('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), delete_by_id);
 
 
@@ -30,13 +31,29 @@ async function get(req, res, next) {
 }
 
 async function get_my_blogs(req, res, next) {
-    const {sub} = req.user;
+    let id_user_blogger;
+    const joinData = {
+        "endpoint": "my-blogs",
+        "main_table": "blogger",
+        "secondary_table": "user_blogger",
+        "id_secondary_table": "id_user_blogger",
+        "id": req.user.sub,
+    };
+    await Controller.get(joinData)
+        .then((blogger) =>{
+            id_user_blogger = blogger[0].id_blogger;
+            console.log('id del blogger: '+id_user_blogger);
+        })
+        .catch((err) =>{
+            console.log(err);
+        });
+
     const data = {
         "endpoint": "my-blogs",
         "main_table": "blog",
         "secondary_table": "blogger",
         "id_secondary_table": "id_blogger",
-        "id": sub
+        "id": id_user_blogger
     };
     Controller.get(data)
         .then((data) =>{
@@ -48,9 +65,9 @@ async function get_my_blogs(req, res, next) {
         });
 }
 
-// Manejar que en la D.B. se ingrese los datos de tipo fecha automáticamente
 async function post(req, res, next) {
-    const data = req.body;
+    let data = req.body;
+    data.id_user_blogger = req.user.sub;
     Controller.insert(data)
         .then((data) =>{
             console.log(data);
@@ -60,6 +77,30 @@ async function post(req, res, next) {
             console.log(err);
         });
 }
+
+
+// async function get_id_blogger(req, res, next) {
+//     const id_user_blogger = req.user.sub;
+//     const joinData = {
+//         "endpoint": "my-blogs",
+//         "main_table": "blogger",
+//         "secondary_table": "user_blogger",
+//         "id_secondary_table": "id_user_blogger",
+//         "id": id_user_blogger,
+//     };
+    
+//     Controller.get(joinData)
+//         .then((blogger) =>{
+//             return user = {
+//                 "sub": blogger[0].id_blogger,
+//             };
+//             //next(user);
+//         })
+//         .catch((err) =>{
+//             console.log(err);
+//             throw Error(`The blogger couldntbe found`)
+//         });
+// }
 
 async function put(req, res, next) {
     const data = req.body;

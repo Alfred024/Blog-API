@@ -1,14 +1,8 @@
 BLOG API 
 
 MUST
-
 * Guardar el JWT en una cookie --> Mandar el JWT en cada petición
 * Función refreshToken 
-* Documentar endpoints
-   estado de login: guardar (en una cookie) la sesión del usuario con los Tokens
-
-* Middleware para el despliegue de información de errores
-* Crear SEED para crear datos
 * IMplemenar PM2 para microservicios
 
 
@@ -38,22 +32,13 @@ Tareas para los D.B.A´s:
 	"email": "testuser@gmail.com",
 	"password": "TestUser12$",
 }
-{
-	"email": "testuser3@gmail.com",
-	"password": "TestUser3$",
-}
 
-//role: ADMIN
 {
-	"email": "testuser2@gmail.com",
-	"password": "TestUser12$",
+	"id_blogger": 3,
+	"name": "Juán José",
+	"first_username": "Becerra",
+	"second_username": "Caracheo",
+	"id_career": 2,
+	"id_user_blogger": 4
 }
-	{
-		"id_blogger": 1,
-		"name": "testuser2@gmail.com",
-		"first_username": "TestUser12$",
-		"second_username": "ADMIN",
-		"id_career": 1,
-		"id_user_blogger": 4
-	}
 
