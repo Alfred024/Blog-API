@@ -2,10 +2,10 @@
 //Provee los métodos al Controller del componente en la API
 
 //Use this import if youre using node to run the API
-const axios = require('axios');
+//const axios = require('axios');
 
 //Use this import if youre using npx nodemon to run the API
-//const axios = require('axios/dist/node/axios.cjs');
+const axios = require('axios/dist/node/axios.cjs');
 const { evalueateMethod } = require('./utils/remote_http_functions');
 
 function connectToRemoteDBService(host, port) {
@@ -25,6 +25,10 @@ function connectToRemoteDBService(host, port) {
 
     function update(table, data) {
         return req('PUT', table, data);
+    }
+
+    function update_partially(table, data) {
+        return req('PATCH', table, data);
     }
 
     function delete_by_id(table, id) {
@@ -57,6 +61,7 @@ function connectToRemoteDBService(host, port) {
         get,
         insert,
         update,
+        update_partially,
         delete_by_id,
     };
 }

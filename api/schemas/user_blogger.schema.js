@@ -26,9 +26,16 @@ const createUserBloggerSchema = Joi.object({
     role: role.required()
 });
 
-const updateUserBloggerSchema = Joi.object({
+const putUserBloggerSchema = Joi.object({
+    password: password.required(), 
+    role: role.required(),
+});
+
+const patchUserBloggerSchema = Joi.object({
     password: password, 
     role: role,
 });
 
-module.exports = { getUserBloggerSchema, createUserBloggerSchema, updateUserBloggerSchema };
+module.exports = { 
+    getUserBloggerSchema, createUserBloggerSchema, putUserBloggerSchema, patchUserBloggerSchema, 
+};

@@ -31,13 +31,13 @@ function evaluateTypeOfData(value) {
     }
 }
 
-function mapJsonDataToFields_Update(jsonData) {
-    const fieldName = Object.keys(jsonData);
-    const fieldNewValue = Object.values(jsonData);
+function mapJsonDataToFields_Update(jsonData, index) {
+    const fieldName = Object.keys(jsonData)[index];
+    const fieldNewValue = Object.values(jsonData)[index];
 
     return {
-        "fieldName": fieldName[0], //Retorna el nombre del campo a modificar
-        "fieldNewValue": fieldNewValue[0], //Retorna el nuevo valor del campo 
+        "fieldName": fieldName, //Retorna el nombre del campo a modificar
+        "fieldNewValue": fieldNewValue, //Retorna el nuevo valor del campo 
     }
 }
 

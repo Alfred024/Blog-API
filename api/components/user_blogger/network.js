@@ -5,7 +5,7 @@ const passport = require('passport');
 const {validatorHandler} = require('../../middlewares/validator.handler');
 const { checkRoles, checkOwner } = require('../../middlewares/auth.handler');
 
-const { getUserBloggerSchema, createUserBloggerSchema, updateUserBloggerSchema } = require('../../schemas/user_blogger.schema');
+const { getUserBloggerSchema, createUserBloggerSchema, putUserBloggerSchema, patchUserBloggerSchema, } = require('../../schemas/user_blogger.schema');
 
 const Controller = require('./index');
 
@@ -13,7 +13,8 @@ const Controller = require('./index');
 router.get('/', passport.authenticate('jwt', {session:false}), checkRoles('ADMIN'), get);
 router.get('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), validatorHandler(getUserBloggerSchema, 'params'), get_by_id);
 router.post('/', validatorHandler(createUserBloggerSchema, 'body'), post);
-router.put('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), validatorHandler(updateUserBloggerSchema, 'body'), put);
+router.put('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), validatorHandler(putUserBloggerSchema, 'body'), put);
+router.patch('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), validatorHandler(patchUserBloggerSchema, 'body'), patch);
 router.delete('/:id', passport.authenticate('jwt', {session:false}), delete_by_id);
 
 async function get(req, res, next) {
@@ -50,9 +51,29 @@ async function post(req, res, next) {
         });
 }
 
+//El put es para actualizar todo
 async function put(req, res, next) {
     let data = req.body;
     data.password = await bcrypt.hash(data.password, 5);
+    const id = req.params.id;
+    Controller.update(data, id)
+        .then((data) =>{
+            console.log(data);
+            res.send(data);
+        })
+        .catch((err) =>{
+            console.log(err);
+        });
+}
+
+// Es para actualizar parcialmente 
+async function patch(req, res, next) {
+    let data = req.body;
+
+    if(data.password){
+        data.password = await bcrypt.hash(data.password, 5);
+    }
+
     const id = req.params.id;
     Controller.update(data, id)
         .then((data) =>{

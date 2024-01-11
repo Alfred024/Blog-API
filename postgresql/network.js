@@ -12,6 +12,7 @@ router.get('/:table/my-blogs/:id', get_blogs_of_blogger);
 router.get('/:table/email/:email', get_user_blogger_by_email);
 router.post('/:table', insert);
 router.put('/:table/:id', update);
+router.patch('/:table/:id', update);
 router.delete('/:table/:id', delete_by_id);
 
 async function list(req, res, next) {
@@ -42,7 +43,7 @@ async function insert(req, res, next) {
 }
 
 async function update(req, res, next) {
-    const data = await Store.update_by_param(req.params.table, req.body, req.params.id);
+    const data = await Store.update_by_params(req.params.table, req.body, req.params.id);
     res.send(data);
 }
 

@@ -96,29 +96,32 @@ function insert(table, data) {
     })
 }
 
-//Crear un for que actaulice cada uno de los valores de un registro
-function update_by_param(table, data, id) {
-    
+// Update if theres a PUT or PATCH request
+function update_by_params(table, data, id) {
     return new Promise((resolve, reject) => {
-        const { fieldName, fieldNewValue } = mapJsonDataToFields_Update(data);
+        const dataSize = Object.keys(data).length;
         let query;
-        if (typeof fieldNewValue === 'string'){
-            query = {
-                text: `UPDATE ${table} SET ${fieldName} = '${fieldNewValue}' WHERE id_${table} = ${id}`
-            }
-        }else{
-            query = {
-                text: `UPDATE ${table} SET ${fieldName} = ${fieldNewValue} WHERE id_${table} = ${id}`
-            }
-        }
-        
-        client.query(query, (error, result) => {
-            if (error) {
-                return reject(error);
+
+        for (let index = 0; index < dataSize; index++) {
+            const { fieldName, fieldNewValue } = mapJsonDataToFields_Update(data, index);
+            if (typeof fieldNewValue === 'string'){
+                query = {
+                    text: `UPDATE ${table} SET ${fieldName} = '${fieldNewValue}' WHERE id_${table} = ${id}`
+                }
             }else{
-                resolve(result);
+                query = {
+                    text: `UPDATE ${table} SET ${fieldName} = ${fieldNewValue} WHERE id_${table} = ${id}`
+                }
             }
-        });
+
+            client.query(query, (error, result) => {
+                if (error) {
+                    return reject(error);
+                }else{
+                    resolve(result);
+                }
+            });
+        }
     });
 }
 
@@ -140,7 +143,7 @@ module.exports = {
     select_join,
     select_by_param_name,
     insert,
-    update_by_param,
+    update_by_params,
     delete_by_id,
 };
 

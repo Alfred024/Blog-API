@@ -10,6 +10,7 @@
 # Dependency directories
 node_modules/
 jspm_packages/
+postgres/
 
 # Optional npm cache directory
 .npm
@@ -19,8 +20,6 @@ jspm_packages/
 .env.test
 .env.production
 
-.txt
-.sql
+*.txt
+*.sql
 
-# Postgres data of docker container
-postgres

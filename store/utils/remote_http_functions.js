@@ -12,7 +12,7 @@ function evalueateMethod(method, baseUrl, options, data) {
             url += `/${id}`;
         }
         
-        if(method === 'PUT'){
+        if(method === 'PUT' || method === 'PATCH'){
             const { id, jsonData } = data;
             url += `/${id}`;
             newOptions.data = jsonData;

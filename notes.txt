@@ -28,7 +28,7 @@ Tareas para los D.B.A´s:
 //role: NORMAL
 {
 	"email": "testuser@gmail.com",
-	"password": "TestUser12$",
+	"password": "Updated12$$",
 }
 
 {
