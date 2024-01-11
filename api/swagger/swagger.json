@@ -1,162 +1,284 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "TecNM Blog API Documentation",
-      "description": "This is the official documentation of the _TecNM Blog API_ created with Swagger.\n\nImportant links:\n- [Project repository](https://github.com/Alfred024/Blog-API)\n- [Web page of the team](https://itcoders.tech/)",
-      "version": "1.0.0"
+  "openapi": "3.0.3",
+  "info": {
+    "title": "TecNM Blog API Documentation",
+    "description": "This is the official documentation of the _TecNM Blog API_ created with Swagger\n\nImportant links: \n  - [Project repository](https://github.com/Alfred024/Blog-API)\n  - [Web page of the team](https://itcoders.tech/)",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "apiteam@swagger.io"
     },
-    "externalDocs": {
-      "description": "Find out more about Swagger",
-      "url": "http://swagger.io"
+    "version": "1.0.11"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api"
+    }
+  ],
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Everything about Authentication"
     },
-    "servers": [
-      {
-        "url": "https://dns_coming_soon/api/v3"
-      }
-    ],
-    "tags": [
-      {
-        "name": "user",
-        "description": "Operations of user"
-      }
-    ],
-    "paths": {
-      "/user/{id_user}": {
-        "get": {
-          "tags": [
-            "user"
-          ],
-          "summary": "Get user by user name",
-          "description": "",
-          "operationId": "getUserByName",
-          "parameters": [
-            {
-              "name": "id_user",
-              "in": "path",
-              "description": "The name that needs to be fetched. Use user1 for testing. ",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "successful operation",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/User"
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Invalid id supplied"
-            },
-            "404": {
-              "description": "User not found"
-            }
-          }
-        },
-        "delete": {
-          "tags": [
-            "user"
-          ],
-          "summary": "Delete user",
-          "description": "This can only be done by the logged in user.",
-          "operationId": "deleteUser",
-          "parameters": [
-            {
-              "name": "id_user",
-              "in": "path",
-              "description": "The name that needs to be deleted",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "400": {
-              "description": "Invalid username supplied"
-            },
-            "404": {
-              "description": "User not found"
-            }
-          }
-        }
-      }
-    },
-    "components": {
-      "schemas": {
-        "User": {
-          "type": "object",
-          "properties": {
-            "username": {
-              "type": "string",
-              "example": "Chanclón"
-            },
-            "firstName": {
-              "type": "string",
-              "example": "Van"
-            },
-            "lastName": {
-              "type": "string",
-              "example": "Dam"
-            },
-            "email": {
-              "type": "string",
-              "example": "chanclonvandam@gmail.com"
-            },
-            "password": {
-              "type": "string",
-              "example": "12345"
-            },
-            "userStatus": {
-              "type": "integer",
-              "description": "User Status",
-              "format": "int32",
-              "example": 1
-            }
-          },
-          "xml": {
-            "name": "user"
-          }
-        },
-        "ApiResponse": {
-          "type": "object",
-          "properties": {
-            "code": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "type": {
-              "type": "string"
-            },
-            "message": {
-              "type": "string"
-            }
-          },
-          "xml": {
-            "name": "##default"
-          }
-        }
-      },
-      "requestBodies": {
-        "UserArray": {
-          "description": "List of user object",
+    {
+      "name": "user_blogger",
+      "description": "Operations about user"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Create a new user",
+        "operationId": "registerUser",
+        "requestBody": {
+          "description": "Make a request to register a user",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful register"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login to get a token and tests the endpoints",
+        "operationId": "logUser",
+        "requestBody": {
+          "description": "Make a request to login",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User_login"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user_blogger": {
+      "get": {
+        "tags": [
+          "user_blogger"
+        ],
+        "summary": "Get users",
+        "description": "Returns a single pet",
+        "operationId": "getPetById",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
                   "$ref": "#/components/schemas/User"
                 }
               }
             }
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "user_blogger"
+        ],
+        "summary": "Deletes user_blogger",
+        "description": "Delete a user",
+        "operationId": "deleteUserBlogger",
+        "parameters": [
+          {
+            "name": "JWT",
+            "in": "header",
+            "description": "Use the generate in aut/login token to delete a user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "int64",
+            "example": "testuser@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "int64",
+            "example": "TestUser12$"
+          },
+          "role": {
+            "type": "string",
+            "example": "NORMAL",
+            "enum": [
+              "NORMAL",
+              "ADMIN"
+            ]
+          }
+        }
+      },
+      "User_login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "int64",
+            "example": "testuser@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "int64",
+            "example": "TestUser12$"
+          }
+        }
+      },
+      "User_response": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "id_user_blogger": {
+                "type": "integer",
+                "format": "int64",
+                "example": 1
+              },
+              "email": {
+                "type": "string",
+                "format": "int64",
+                "example": "testuser@gmail.com"
+              },
+              "role": {
+                "type": "string",
+                "example": "NORMAL",
+                "enum": [
+                  "NORMAL",
+                  "ADMIN"
+                ]
+              }
+            }
+          },
+          "token": {
+            "type": "string",
+            "format": "int64",
+            "example": "eyJhaZxiOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjUsInJvbGUiOiJOT1JNQUwiLCJpYXQiOjE3MDQ5ODc2NjJ9.XmXMjo_n2VtwnrpiZGlsaSZWQ6MAFpAgThC_Es31aHY"
+          }
+        }
+      },
+      "Blogger": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "username": {
+            "type": "string",
+            "example": "theUser"
+          },
+          "firstName": {
+            "type": "string",
+            "example": "John"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "James"
+          },
+          "email": {
+            "type": "string",
+            "example": "john@email.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "12345"
+          },
+          "phone": {
+            "type": "string",
+            "example": "12345"
+          },
+          "userStatus": {
+            "type": "integer",
+            "description": "User Status",
+            "format": "int32",
+            "example": 1
+          }
+        },
+        "xml": {
+          "name": "user"
+        }
+      }
+    },
+    "requestBodies": {
+      "UserArray": {
+        "description": "List of user object",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "petstore_auth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://petstore3.swagger.io/oauth/authorize",
+            "scopes": {
+              "write:pets": "modify pets in your account",
+              "read:pets": "read your pets"
+            }
+          }
+        }
+      },
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
       }
     }
   }
+}

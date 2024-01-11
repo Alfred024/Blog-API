@@ -22,8 +22,6 @@ from pg_type t
 Tareas para los D.B.A´s:
 1.- Crear triggers para cuando se haga algún delete
 2.- Crear la tabla que guarde la información generada por el trigger
-3.- Manejar que en la D.B. se ingrese los datos de tipo fecha automáticamente. http://localhost:3000/api/blogger/
-4.- Agregar los delete on cascade 
 
 
 ---Usuarios de prueba---

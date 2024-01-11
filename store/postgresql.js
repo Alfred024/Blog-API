@@ -96,7 +96,9 @@ function insert(table, data) {
     })
 }
 
+//Crear un for que actaulice cada uno de los valores de un registro
 function update_by_param(table, data, id) {
+    
     return new Promise((resolve, reject) => {
         const { fieldName, fieldNewValue } = mapJsonDataToFields_Update(data);
         let query;
