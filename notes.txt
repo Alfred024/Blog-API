@@ -1,17 +1,15 @@
 BLOG API 
 
 MUST
-* Implementar Pool connection en las peticiones HTTP de axios/en el archivo de las funciones de Postgres
-* Guardar el JWT para matener sesión (cookie)
-* Función para agregar el Bearer token en la request
-* Manejar despliegue de información de error
 
-SHOULD 
-* Documentar endpoints
-* IMplemenar PM2 para microservicios
-* Crear SEED para crear datos
+* Guardar el JWT en una cookie --> Mandar el JWT en cada petición
 * Función refreshToken 
+* Documentar endpoints
+   estado de login: guardar (en una cookie) la sesión del usuario con los Tokens
 
+* Middleware para el despliegue de información de errores
+* Crear SEED para crear datos
+* IMplemenar PM2 para microservicios
 
 
 Mostrar enums en una B.D´s de postgres
@@ -24,6 +22,24 @@ from pg_type t
 
 
 //DUDA: Los blogger y los user_blogger siempretendrán el mimso ID? o habrá casos en los que no 
-select * from blog bl
-join blogger blr on bl.id_blogger = blr.id_blogger
-where bl.id_blogger = ${p_id};
+//El método PUT sólo actualiza un campo a la vez
+//Consideración para escalar la aplicación: Implementar pool connections para ma
+
+Tareas para los D.B.A´s:
+1.- Crear triggers para cuando se haga algún delete
+2.- Crear la tabla que guarde la información generada por el trigger
+3.- Manejar que en la D.B. se ingrese los datos de tipo fecha automáticamente. http://localhost:3000/api/blogger/
+4.- Agregar los delte on cascade 
+
+---Usuarios de prueba---
+//role: NORMAL
+{
+	"email": "testuser@gmail.com",
+	"password": "TestUser12$",
+}
+
+//role: ADMIN
+{
+	"email": "testuser2@gmail.com",
+	"password": "TestUser12$",
+}
