@@ -45,8 +45,8 @@ router.post('/register',
         data.password = await bcrypt.hash(data.password, 5);
         Controller.register(data)
             .then((data) =>{
-                console.log(data);
-                res.send(data);
+                console.log(`DB message: ${data}`);
+                res.send('User registered succesfully!!');
             })
             .catch((err) =>{
                 console.log(err);

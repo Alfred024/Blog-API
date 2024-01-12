@@ -21,7 +21,11 @@
     },
     {
       "name": "user_blogger",
-      "description": "Operations about user"
+      "description": "Operations about user_blogger"
+    },
+    {
+      "name": "blogger",
+      "description": "Operations of blogger"
     }
   ],
   "paths": {
@@ -88,8 +92,45 @@
           "user_blogger"
         ],
         "summary": "Get users",
-        "description": "Returns a single pet",
-        "operationId": "getPetById",
+        "description": "Returns a single user_blogger",
+        "operationId": "getUser_bloggerById",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user_blogger/{id_user_blogger}": {
+      "get": {
+        "tags": [
+          "user_blogger"
+        ],
+        "summary": "Find user_blogger by ID",
+        "description": "Returns a User blogger, but only if it is the owner of the user",
+        "operationId": "getUserById",
+        "parameters": [
+          {
+            "name": "id_user_blogger",
+            "in": "path",
+            "description": "ID of a user_blogger to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -100,8 +141,52 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Invalid ID"
+          },
+          "404": {
+            "description": "User not found"
           }
         }
+      },
+      "put": {
+        "tags": [
+          "user_blogger"
+        ],
+        "summary": "Update an existing user_blogger",
+        "description": "Update an existing user_blogger by Id",
+        "operationId": "updateUser_blogger",
+        "requestBody": {
+          "description": "Update an existent user_blogger in the store",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User_put"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "User succesfully updated"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "User_blogger not found"
+          }
+        },
+        "security": [
+          {
+            "user_bloggerstore_auth": [
+              "write:user_bloggers",
+              "read:user_bloggers"
+            ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -122,6 +207,43 @@
           }
         ],
         "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+      
+    },
+    "/blogger/my-blogs": {
+      "get": {
+        "tags": [
+          "blogger"
+        ],
+        "summary": "Get the blogs own by a blogger",
+        "description": "Get blogger blogs",
+        "operationId": "myBlogsId",
+        "parameters": [
+          {
+            "name": "JWT",
+            "in": "header",
+            "description": "Use the token generate in auth login to get the blogs of a user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Blog_response"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized"
           }
@@ -202,6 +324,26 @@
           }
         }
       },
+      "User_put": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "required": true,
+            "type": "string",
+            "format": "int64",
+            "example": "TestUser12$"
+          },
+          "role": {
+            "required": true,
+            "type": "string",
+            "example": "NORMAL",
+            "enum": [
+              "NORMAL",
+              "ADMIN"
+            ]
+          }
+        }
+      },
       "Blogger": {
         "type": "object",
         "properties": {
@@ -244,6 +386,51 @@
         "xml": {
           "name": "user"
         }
+      },
+      "Blog_response": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "format": "int64",
+            "example": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>Blog demo</title>\r\n</head>\r\n<body>\r\n    <h1>El blog demo</h1>\r\n</body>\r\n</html>"
+          },
+          "date_last_change": {
+            "type": "string",
+            "format": "int64",
+            "example": "2024-01-11T06:00:00.000Z"
+          },
+          "date_publication": {
+            "type": "string",
+            "format": "int64",
+            "example": "2024-01-11T06:00:00.000Z"
+          },
+          "id_blogger": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "id_blog": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "format": "int64",
+            "example": "TestUser12$"
+          },
+          "slug": {
+            "type": "string",
+            "format": "int64",
+            "example": "TestUser12$"
+          },
+          "description": {
+            "type": "string",
+            "format": "int64",
+            "example": "TestUser12$"
+          }    
+        }
       }
     },
     "requestBodies": {
@@ -262,14 +449,14 @@
       }
     },
     "securitySchemes": {
-      "petstore_auth": {
+      "user_bloggerstore_auth": {
         "type": "oauth2",
         "flows": {
           "implicit": {
-            "authorizationUrl": "https://petstore3.swagger.io/oauth/authorize",
+            "authorizationUrl": "https://user_bloggerstore3.swagger.io/oauth/authorize",
             "scopes": {
-              "write:pets": "modify pets in your account",
-              "read:pets": "read your pets"
+              "write:user_bloggers": "modify user_bloggers in your account",
+              "read:user_bloggers": "read your user_bloggers"
             }
           }
         }

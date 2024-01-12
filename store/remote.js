@@ -2,10 +2,10 @@
 //Provee los métodos al Controller del componente en la API
 
 //Use this import if youre using node to run the API
-//const axios = require('axios');
+const axios = require('axios');
 
 //Use this import if youre using npx nodemon to run the API
-const axios = require('axios/dist/node/axios.cjs');
+//const axios = require('axios/dist/node/axios.cjs');
 const { evalueateMethod } = require('./utils/remote_http_functions');
 
 function connectToRemoteDBService(host, port) {
