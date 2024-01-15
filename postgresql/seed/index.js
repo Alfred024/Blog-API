@@ -1,0 +1,1 @@
+const Ctrl = require('./controller');
