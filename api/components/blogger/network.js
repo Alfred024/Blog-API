@@ -1,13 +1,14 @@
 const express = require('express');
+const router = express.Router();
+const Controller = require('./index');
+// Auth
 const passport = require('passport');
+// Schemas
+const { getBloggerSchema, createBloggerSchema, putBloggerSchema, patchBloggerSchema } = require('../../schemas/blogger.schema');
+// Middlewares
 const {validatorHandler} = require('../../middlewares/validator.handler');
 const { checkOwner } = require('../../middlewares/auth.handler');
 
-const { getBloggerSchema, createBloggerSchema, putBloggerSchema, patchBloggerSchema } = require('../../schemas/blogger.schema');
-
-const Controller = require('./index');
-
-const router = express.Router();
 
 router.get('/', passport.authenticate('jwt', {session:false}), get);
 router.get('/my-blogs', passport.authenticate('jwt', {session:false}), get_my_blogs);
@@ -25,7 +26,7 @@ async function get(req, res, next) {
             res.send(data);
         })
         .catch((err) =>{
-            console.log(err);
+            next(err);
         });
 }
 
@@ -43,7 +44,7 @@ async function get_my_blogs(req, res, next) {
             id_user_blogger = blogger[0].id_blogger;
         })
         .catch((err) =>{
-            console.log(err);
+            next(err);
         });
 
     const data = {
@@ -58,7 +59,7 @@ async function get_my_blogs(req, res, next) {
             res.send(data);
         })
         .catch((err) =>{
-            console.log(err);
+            next(err);
         });
 }
 
@@ -70,7 +71,7 @@ async function post(req, res, next) {
             res.send(data);
         })
         .catch((err) =>{
-            console.log(err);
+            next(err);
         });
 }
 
@@ -105,7 +106,7 @@ async function put(req, res, next) {
             res.send(data);
         })
         .catch((err) =>{
-            console.log(err);
+            next(err);
         });
 }
 
@@ -117,7 +118,7 @@ async function patch(req, res, next) {
             res.send(data);
         })
         .catch((err) =>{
-            console.log(err);
+            next(err);
         });
 }
 
@@ -128,7 +129,7 @@ async function delete_by_id(req, res, next) {
             res.send(data);
         })
         .catch((err) =>{
-            console.log(err);
+            next(err);
         });
 }
 

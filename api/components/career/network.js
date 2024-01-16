@@ -1,13 +1,14 @@
 const express = require('express');
+const router = express.Router();
+const Controller = require('./index');
+// Auth
 const passport = require('passport');
-const {validatorHandler} = require('../../middlewares/validator.handler');
+// Schemas
 const { getCareerSchema, createCareerSchema, putCareerSchema, patchCareerSchema } = require('../../schemas/career.schema');
+// Middlewares
+const {validatorHandler} = require('../../middlewares/validator.handler');
 const { checkRoles } = require('../../middlewares/auth.handler');
 
-
-const Controller = require('./index');
-
-const router = express.Router();
 
 router.get('/', get);
 router.get('/:id', validatorHandler(getCareerSchema, 'params'), get_by_id);
@@ -22,7 +23,7 @@ async function get(req, res, next) {
             res.send(data);
         })
         .catch((err) =>{
-            console.log(err);
+            next(err);
         });
 }
 
@@ -33,7 +34,7 @@ async function get_by_id(req, res, next) {
             res.send(data);
         })
         .catch((err) =>{
-            console.log(err);
+            next(err);
         });
 }
 
@@ -45,7 +46,7 @@ async function post(req, res, next) {
                 res.send(data);
             })
             .catch((err) =>{
-                console.log(err);
+                next(err);
             });
 }
 
@@ -58,7 +59,7 @@ async function put(req, res, next) {
             res.send(data);
         })
         .catch((err) =>{
-            console.log(err);
+            next(err);
         });
 }
 
@@ -70,7 +71,7 @@ async function delete_by_id(req, res, next) {
             res.send(data);
         })
         .catch((err) =>{
-            console.log(err);
+            next(err);
         });
 }
 

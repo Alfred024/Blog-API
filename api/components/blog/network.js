@@ -1,12 +1,13 @@
 const express = require('express');
+const router = express.Router();
+const Controller = require('./index');
+// Auth
 const passport = require('passport');
+// Schemas
+const { getBlogSchema, createBlogSchema, putBlogSchema, patchBlogSchema, } = require('../../schemas/blog.schema');
+// Middlewares
 const {validatorHandler} = require('../../middlewares/validator.handler');
 const {checkRoles, checkOwner} = require('../../middlewares/auth.handler');
-const { getBlogSchema, createBlogSchema, putBlogSchema, patchBlogSchema, } = require('../../schemas/blog.schema');
-
-const Controller = require('./index');
-
-const router = express.Router();
 
 router.get('/', passport.authenticate('jwt', {session:false}), get);
 router.get('/:id', passport.authenticate('jwt', {session:false}), validatorHandler(getBlogSchema, 'params'), get_by_id);
@@ -21,7 +22,7 @@ async function get(req, res, next) {
             res.send(data);
         })
         .catch((err) =>{
-            console.log(err);
+            next(err);
         });
 }
 
@@ -32,10 +33,9 @@ async function get_by_id(req, res, next) {
             res.send(data);
         })
         .catch((err) =>{
-            console.log(err);
+            next(err);
         });
 }
-
 
 async function post(req, res, next) {
     const data = req.body;
@@ -53,7 +53,7 @@ async function post(req, res, next) {
             console.log('id del blogger: '+id_user_blogger);
         })
         .catch((err) =>{
-            console.log(err);
+            next(err);
         });
 
     data.id_blogger = id_user_blogger;
@@ -65,7 +65,7 @@ async function post(req, res, next) {
             res.send(data);
         })
         .catch((err) =>{
-            console.log(err);
+            next(err);
         });
 }
 
@@ -78,7 +78,7 @@ async function put(req, res, next) {
             res.send(data);
         })
         .catch((err) =>{
-            console.log(err);
+            next(err);
         });
 }
 
@@ -90,7 +90,7 @@ async function delete_by_id(req, res, next) {
             res.send(data);
         })
         .catch((err) =>{
-            console.log(err);
+            next(err);
         });
 }
 
