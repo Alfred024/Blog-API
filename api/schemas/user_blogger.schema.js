@@ -22,18 +22,15 @@ const createUserBloggerSchema = Joi.object({
         .minOfUppercase(1)
         .minOfNumeric(2)
         .noWhiteSpaces()
-        .required(), 
-    role: role.required()
+        .required(),
 });
 
 const putUserBloggerSchema = Joi.object({
     password: password.required(), 
-    role: role.required(),
 });
 
 const patchUserBloggerSchema = Joi.object({
     password: password, 
-    role: role,
 });
 
 module.exports = { 

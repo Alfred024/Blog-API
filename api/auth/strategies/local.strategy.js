@@ -1,5 +1,8 @@
+// Auth dependencies
 const {Strategy} = require('passport-local');
 const bcrypt = require('bcrypt');
+// Errors handle
+const boom = require('@hapi/boom');
 
 const Controller = require('../../components/auth/index');
 var LocalStrategy = new Strategy( 
@@ -16,18 +19,17 @@ var LocalStrategy = new Strategy(
         Controller.get_user_blogger_by_email(data)
             .then( async (user) => {
                 if ( !user[0]) {
-                    done(`No user found with the email: ${email}`, false);
+                    throw boom.notFound(`No user found with the email: ${email}`);
                 }
                 const isMatch = await bcrypt.compare(password, user[0].password);
                 if (!isMatch) {
-                    done(`The email or password are not correct`, false);
+                    throw boom.unauthorized(`The password are not correct`);
                 }
                 delete user[0].password;
                 done(null, user);
             })
             .catch((err) =>{
-                console.log('NO SE PUEDE ASÍ');
-                done(err, false);
+                done(boom.serverUnavailable(err));
             });
   }
 );
