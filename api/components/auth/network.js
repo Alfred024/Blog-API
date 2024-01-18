@@ -19,63 +19,75 @@ const boom = require('@hapi/boom');
 const {sendEmailVerificationLink} = require('./utils/email_functions');
 
 
-router.post('/login', 
-    validatorHandler(postAuthLogin, 'body'),
-    passport.authenticate('local', {session: false}),
-    async (req, res, next) =>{
-        try {
-            // const user = req.user[0];
-            // const payload = {
-            //     sub: user.id_user_blogger,
-            //     role: user.role,
-            // }
+router.post('/login', validatorHandler(postAuthLogin, 'body'), passport.authenticate('local', {session: false}), login);
+router.post('/register', validatorHandler(createUserBloggerSchema, 'body'), register);
+router.get('/confirmation/:emailToken', updateConifrmedStatus);
 
-            // const token= jwt.sign(payload, secret,);
-            // res.json({user, token});
-            const user = req.user[0];
-            if (user.confirmed){
-                const payload = {
-                    sub: user.id_user_blogger,
-                    role: user.role,
-                    //confirmed: userConfirmedStatus,
-                }
-    
-                const token= jwt.sign(payload, secret,);
-                res.json({user, token});
-            }
-
-            throw next(Error('Please, confirm your email before login.'));
-        } catch (error) {
-            next(error);
-        }
-});
-
-router.post('/register', 
-    validatorHandler(createUserBloggerSchema, 'body'),
-    async (req, res, next) => {
-        // Mandar el código de verificación
-        let userData = req.body;
-        userData.password = await bcrypt.hash(userData.password, 5);
-        console.log('Sending email...');
-        await sendEmailVerificationLink(userData.id_user_blogger, userData.email);
-        Controller.register(userData)
-            .then(async (data) => {
-                console.log(`DB message: ${data}`);
-                res.send('Great!! now, please check your email to confirm your account.');
-            })
-            .catch((err) =>{
-                next(err);
-            });
-});
-
-router.get('/confirmation/:emailToken', (req, res, next) =>{
+async function login(req, res, next) {
     try {
-        const { id_user_blogger } = jwt.verify(req.params.emailToken, config.api_smtp.password);
-        // SE ACTUALIZA EL USER BLOGGER CON ESE ID: CONFIRMED = TRUE;
-        res.redirect('/login');
+        const user = req.user[0];
+        if (user.confirmed){
+            const payload = {
+                sub: user.id_user_blogger,
+                role: user.role,
+            }
+            const token= jwt.sign(payload, secret,);
+            res.json({user, token});
+        }
+
+        throw next(Error('Please, confirm your email before login.'));
     } catch (error) {
-        next(boom.unauthorized('Please, check your email and click the confirmation link.'))
+        next(error);
     }
-});
+}
+
+async function register (req, res, next){
+    let userData = req.body;
+    userData.password = await bcrypt.hash(userData.password, 5);
+
+    Controller.register(userData)
+        .then(async (data) => {
+            try {
+                await getUserByEmail(userData.email);
+            } catch (error) {
+                next(Error('Error at trying to register the user'));
+            }
+            res.send('Great!! now, please check your email to confirm your account.');
+        })
+        .catch((err) =>{
+            next(err);
+        });
+}
+
+async function getUserByEmail(email){
+    const data = {
+        "table": "user_blogger",
+        "param_name": "email",
+        "param_value": email
+    };
+    Controller.get_user_blogger_by_email(data)
+        .then( async (user) => {
+            await sendEmailVerificationLink(user[0].id_user_blogger, user[0].email);
+        })
+        .catch((err) =>{
+            next(Error('Error catching the user'));
+        });
+}
+
+async function updateConifrmedStatus (req, res, next){
+    try {
+        const {sub} = jwt.verify(req.params.emailToken, config.api_smtp.password);
+
+        Controller.update_user({confirmed: true}, sub)
+            .then((data) =>{
+                res.send('User confirmed. Now you can login.');
+            })
+            .catch((error) =>{
+                next(error);
+            });
+    } catch (error) {
+        next(boom.unauthorized('Expyred token.'));
+    }
+}
 
 module.exports = router;

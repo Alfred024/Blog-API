@@ -12,7 +12,7 @@ apiKey.apiKey = config.api_smtp.api_key;
 
     // Data
 // API URL 
-const url = `http://${config.api.host}:${config.api.port}`
+const apiUrl = `http://${config.api.host}:${config.api.port}`
 
 
 // Check if the user is confirmed
@@ -22,13 +22,18 @@ async function tryLogin(){
 // express-rate-limit to limit the user requests
 // request time out for the senEmail function
 async function sendEmailVerificationLink(id_user_blogger, email) {
-    const emailToken = jwt.sign({sub: id_user_blogger}, config.api_smtp.password, {expiresIn: '30m'});
-    const confirmationURL = `${url}/confirmation/${emailToken}`;
+    const payload = {
+        sub: id_user_blogger,
+    }
+    const emailToken = jwt.sign(payload, config.api_smtp.password, {expiresIn: '1h'});
+    console.log(emailToken);
+    const confirmationURL = `${apiUrl}/api/auth/confirmation/${emailToken}`;
 
     var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
     const sender = {
         email: config.api_smtp.email,
-        name: 'Alfredo'
+        name: 'ITC admin'
     };
     const receivers = [{email: email}];
     try {
@@ -36,7 +41,6 @@ async function sendEmailVerificationLink(id_user_blogger, email) {
             sender,
             to: receivers,
             subject: "Blog TECnM confirmation link",
-            // Actualizar el HTML a uno más bonito y hacer que el link de referncia funcione.
             htmlContent: `<p>This is your confirmation link, click on it to confirm your account: </p>
             <a href="${confirmationURL}">${confirmationURL}</a>
             <strong>This link wont be valid in 30 minutes</strong>`
