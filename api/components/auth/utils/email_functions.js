@@ -10,32 +10,26 @@ var defaultClient = SibApiV3Sdk.ApiClient.instance;
 var apiKey = defaultClient.authentications['api-key'];
 apiKey.apiKey = config.api_smtp.api_key;
 
-    // Data
-// API URL 
+// // TODO: Cambiar el email sender a un correo de cuenta administrativa
+const sender = {
+    email: config.api_smtp.email,
+    name: 'ITC admin'
+};
 const apiUrl = `http://${config.api.host}:${config.api.port}`
 
-
-// Check if the user is confirmed
-async function tryLogin(){
-
-}
 // express-rate-limit to limit the user requests
 // request time out for the senEmail function
 async function sendEmailVerificationLink(id_user_blogger, email) {
     const payload = {
         sub: id_user_blogger,
     }
-    const emailToken = jwt.sign(payload, config.api_smtp.password, {expiresIn: '1h'});
-    console.log(emailToken);
+    const emailToken = jwt.sign(payload, config.api.secret, {expiresIn: '1h'});
     const confirmationURL = `${apiUrl}/api/auth/confirmation/${emailToken}`;
 
     var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-
-    const sender = {
-        email: config.api_smtp.email,
-        name: 'ITC admin'
-    };
+   
     const receivers = [{email: email}];
+
     try {
         apiInstance.sendTransacEmail({
             sender,

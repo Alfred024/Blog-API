@@ -1,41 +1,32 @@
 const express = require('express');
 const router = express.Router();
 const Controller = require('./index');
-// JWT Secret
-const config = require('../../../config/index');
-//Auth 
-const secret = config.api.secret;
-const passport = require('passport');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 //Middlewares
-const {validatorHandler} = require('../../middlewares/validator.handler');
-//JOi schemas
-const { postAuthLogin } = require('../../schemas/auth.schema');
-const { createUserBloggerSchema } = require('../../schemas/user_blogger.schema');
+const { validatorHandler } = require('../../middlewares/validator.handler');
+//JOI schemas
+const { postAuthLogin, postAuthRegisterSchema } = require('../../schemas/auth.schema');
 //Errors
 const boom = require('@hapi/boom');
+// AuthFunctions
+const AuthFunctions = require('../../auth/utils/auth_functions');
+const auth_functions = new AuthFunctions();
 // SMTP functions
-const {sendEmailVerificationLink} = require('./utils/email_functions');
+const { sendEmailVerificationLink } = require('./utils/email_functions');
 
 
-router.post('/login', validatorHandler(postAuthLogin, 'body'), passport.authenticate('local', {session: false}), login);
-router.post('/register', validatorHandler(createUserBloggerSchema, 'body'), register);
+router.post('/login', validatorHandler(postAuthLogin, 'body'), auth_functions.localAuthenticateUser(), login);
+router.post('/register', validatorHandler(postAuthRegisterSchema, 'body'), register);
 router.get('/confirmation/:emailToken', updateConifrmedStatus);
 
 async function login(req, res, next) {
     try {
         const user = req.user[0];
         if (user.confirmed){
-            const payload = {
-                sub: user.id_user_blogger,
-                role: user.role,
-            }
-            const token= jwt.sign(payload, secret,);
+            const token= auth_functions.createUserToken(user);
             res.json({user, token});
+        }else{
+            throw next(Error('Please, confirm your email before login.'));
         }
-
-        throw next(Error('Please, confirm your email before login.'));
     } catch (error) {
         next(error);
     }
@@ -43,7 +34,7 @@ async function login(req, res, next) {
 
 async function register (req, res, next){
     let userData = req.body;
-    userData.password = await bcrypt.hash(userData.password, 5);
+    userData.password = await auth_functions.encryptPassword(userData.password);
 
     Controller.register(userData)
         .then(async (data) => {
@@ -76,7 +67,7 @@ async function getUserByEmail(email){
 
 async function updateConifrmedStatus (req, res, next){
     try {
-        const {sub} = jwt.verify(req.params.emailToken, config.api_smtp.password);
+        const sub = auth_functions.verifyToken(req.params.emailToken);
 
         Controller.update_user({confirmed: true}, sub)
             .then((data) =>{
@@ -86,7 +77,7 @@ async function updateConifrmedStatus (req, res, next){
                 next(error);
             });
     } catch (error) {
-        next(boom.unauthorized('Expyred token.'));
+        next(boom.unauthorized('Unvalid token.'));
     }
 }
 
