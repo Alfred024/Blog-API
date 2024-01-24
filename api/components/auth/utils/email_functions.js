@@ -19,25 +19,25 @@ const apiUrl = `http://${config.api.host}:${config.api.port}`
 
 // express-rate-limit to limit the user requests
 // request time out for the senEmail function
-async function sendEmailVerificationLink(id_user_blogger, email) {
+async function sendEmailVerificationLink(email) {
     const payload = {
-        sub: id_user_blogger,
+        email: email,
     }
+    // Manda a la pantalla de register
     const emailToken = jwt.sign(payload, config.api.secret, {expiresIn: '1h'});
-    const confirmationURL = `${apiUrl}/api/auth/confirmation/${emailToken}`;
-
-    var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-   
-    const receivers = [{email: email}];
+    const confirmationURL = `${apiUrl}/api/auth/register/${emailToken}`;
 
     try {
+        var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+        const receivers = [{email: email}];
+
         apiInstance.sendTransacEmail({
             sender,
             to: receivers,
-            subject: "Blog TECnM confirmation link",
-            htmlContent: `<p>This is your confirmation link, click on it to confirm your account: </p>
+            subject: "Blog TECnM. Account creation",
+            htmlContent: `<p>Click on the next link to create your Blog account:</p>
             <a href="${confirmationURL}">${confirmationURL}</a>
-            <strong>This link wont be valid in 30 minutes</strong>`
+            <strong>This link would expire in 1 hour</strong>`
         }); 
     } catch (error) {
         throw('Error(error)');

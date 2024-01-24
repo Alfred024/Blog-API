@@ -11,9 +11,12 @@ module.exports = function (injectedStore) {
         return await store.get(TABLE, data);
     }
 
-    // Registra un usuario y un blogger
     async function register(data) {
         return await store.insert(TABLE, data);
+    }
+
+    async function create_account(data) {
+        return await store.insert('blogger', data);
     }
 
     async function update_user(data, id) {
@@ -24,6 +27,7 @@ module.exports = function (injectedStore) {
     return {
         get_user_blogger_by_email,
         register,
+        create_account,
         update_user,
     };
 }

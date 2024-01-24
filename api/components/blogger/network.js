@@ -12,7 +12,9 @@ const { checkOwner } = require('../../middlewares/auth.handler');
 
 router.get('/', passport.authenticate('jwt', {session:false}), get);
 router.get('/my-blogs', passport.authenticate('jwt', {session:false}), get_my_blogs);
-router.post('/', validatorHandler(createBloggerSchema, 'body'), passport.authenticate('jwt', {session:false}), post);
+//router.post('/', validatorHandler(createBloggerSchema, 'body'), passport.authenticate('jwt', {session:false}), post);
+router.post('/', validatorHandler(createBloggerSchema, 'body'), post);
+
 // TODO: Agregar la función de validar si el usuario user_blogger es propietario del bolgger, si no, que no pueda editar
 //router.put('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), validatorHandler(updateBloggerSchema, 'body'), put);
 router.put('/:id', passport.authenticate('jwt', {session:false}), validatorHandler(putBloggerSchema, 'body'), put);

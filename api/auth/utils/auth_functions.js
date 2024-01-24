@@ -7,18 +7,17 @@ class AuthFunctions{
 
     _secret = config.api.secret;
 
-    createUserToken(user) {
+    createUserToken(userEmail) {
         const payload = {
-            sub: user.id_user_blogger,
-            role: user.role,
+            email: userEmail,
         }
-        const token= jwt.sign(payload, this._secret,);
+        const token= jwt.sign(payload, this._secret, {expiresIn: '7d'});
         return token;
     }
 
     verifyToken(token) {
-        const {sub} = jwt.verify(token, this._secret);
-        return sub;
+        const payload = jwt.verify(token, this._secret);
+        return payload;
     }
 
     async encryptPassword(plainTextPassword) {
@@ -29,8 +28,9 @@ class AuthFunctions{
         return passport.authenticate('local', {session: false});   
     }
 
-    async jwtAuthenticateUser(){
-        
+    // Dene obtener el user de alguna parte nuevamente
+    async refreshUserToken(userEmail){
+        return this.createUserToken(userEmail);
     }
 }
 
