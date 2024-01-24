@@ -13,8 +13,8 @@ class AuthFunctions{
             email: userEmail,
             role: role,
         }
-        //const token= jwt.sign(payload, this._secret, {expiresIn: '7d'});
-        const token= jwt.sign(payload, this._secret, {expiresIn: '240s'});
+        const token= jwt.sign(payload, this._secret, {expiresIn: '7d'});
+        //const token= jwt.sign(payload, this._secret, {expiresIn: '240s'});
         return token;
     }
 
@@ -33,7 +33,6 @@ class AuthFunctions{
 
     jwtAuthenticateUser(){
         try {
-            console.log('Sí autentiqué');
             return passport.authenticate('jwt', {session:false});  
         } catch (error) {
             console.log('Authenticate JWT error');

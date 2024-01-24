@@ -17,6 +17,7 @@ module.exports = {
     postgresql_service:{
         port: process.env.PG_SRV_PORT,
         host: process.env.PG_SRV_HOST,
+        api_key: process.env.PG_SRV_API_KEY,
     },
     postgresql_database:{
         port: process.env.PG_PORT,

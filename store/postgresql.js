@@ -88,7 +88,7 @@ function insert(table, data) {
         }
         client.query(query,(error, result) => {
             if (error) {
-                return reject(error);
+                return reject(error.message);
             }else{
                 resolve(result);
             }

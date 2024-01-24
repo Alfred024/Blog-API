@@ -3,20 +3,26 @@ const router = express.Router();
 const Controller = require('./index');
 //Middlewares
 const { validatorHandler } = require('../../middlewares/validator.handler');
+const { checkApiKey } = require('../../middlewares/auth.handler')
 //JOI schemas
-const { postAuthLogin, postAuthRegisterAdminSchema, postAuthRegisterUserSchema } = require('../../schemas/auth.schema');
+const { postAuthLogin, postRegisterAdminSchema, postRegisterUserSchema, postRegisterBloggerSchema } = require('../../schemas/auth.schema');
 //Errors
 const boom = require('@hapi/boom');
 // AuthFunctions
 const AuthFunctions = require('../../auth/utils/auth_functions');
 const auth_functions = new AuthFunctions();
+//AuthHelpers
+const { getUserBloggerByEmail, updateUserPassword, createBlogger } = require('./helpers/db_queries_functions');
 // SMTP functions
-const { sendEmailVerificationLink } = require('./utils/email_functions');
+const { sendEmailVerificationLink } = require('./helpers/email_functions');
 
 //router.get('/renew-token', auth_functions.refreshUserToken());
 router.post('/login', validatorHandler(postAuthLogin, 'body'), auth_functions.localAuthenticateUser(), login);
-router.post('/register-admin', validatorHandler(postAuthRegisterAdminSchema, 'body'), register_admin);
-router.post('/register/:emailToken', validatorHandler(postAuthRegisterUserSchema, 'body'), register_user);
+// Agregar middleware de checkApiKey
+router.post('/register-new-admin', validatorHandler(postRegisterAdminSchema, 'body'), registerNewAdmin);
+// Agregar middleware de checkApiKey
+router.post('/register-by-admin',  validatorHandler(postRegisterUserSchema, 'body'), registerUserByAdmin);
+router.post('/register/:emailToken', validatorHandler(postRegisterBloggerSchema, 'body'), register_user);
 
 // Para el login pedirá el token que se le creó al hacer el registro???
 async function login(req, res, next) {
@@ -28,81 +34,82 @@ async function login(req, res, next) {
         next(error);
     }
 }
-
-// Admin registra un correo y envía un correo
-async function register_admin (req, res, next){
+async function registerNewAdmin(req, res, next) {
     const userData = req.body;
+    userData.password = await auth_functions.encryptPassword(userData.password);
+    userData.role = 'ADMIN';
 
     Controller.register(userData)
         .then(async (data) => {
-            await sendEmailVerificationLink(userData.email);
-            //res.send(user);
-            res.send(`Email sended succesfully to ${userData.email}`);
+            res.send(`ADMIN user registered succesfully`);
         })
         .catch((err) =>{
             next(err);
         });
 }
-
-// Usuario crea su cuenta
-async function register_user(req, res, next) {
-    let userData = req.body;
-    const {email} = auth_functions.verifyToken(req.params.emailToken);
-    userData.email = email;
-    userData.password = await auth_functions.encryptPassword(userData.password);
-
-    const data = {
-        "table": "user_blogger",
-        "param_name": "email",
-        "param_value": userData.email,
-    };
-    // #1 Get user by email 
-    Controller.get_user_blogger_by_email(data)
-        .then(async (user) => {
-            try {
-                // #2 Update user
-                userData.id_user_blogger = user[0].id_user_blogger;
-                userData.role = user[0].role;
-                updateUser(res, next, userData);
-            } catch (error) {
-                next(Error('Couldnt update user'));
-            }
+async function registerUserByAdmin (req, res, next){
+    const userData = req.body;
+    userData.role = 'NORMAL';
+    let userFounded;
+    
+    await getUserBloggerByEmail(userData.email)
+        .then((user) => {
+            userFounded = user;
+        })
+        .catch((err) => {
+            next(err)
+        });
+    
+    if(userFounded){
+        next(Error(`User with email ${userData.email} already exists.`));
+    }
+    
+    Controller.register(userData)
+        .then(async (data) => {
+            await sendEmailVerificationLink(userData.email, next);
+            res.send(`Email sended succesfully to ${userData.email}`);
         })
         .catch((err) =>{
-            done(boom.serverUnavailable(err));
+            console.log('Sí hubo hubo un error');
+            next(Error(`Error trying to do user register.`));
         });
 }
-function updateUser(res, next, user) {
-    Controller.update_user({password: user.password}, user.id_user_blogger)
-        .then(() => {
-            try {
-                createBlogger(res, next, user);
-            } catch (error) {
-                next(Error('Couldnt create the blogger'));
-            }
-        })
-        .catch((error) =>{
-            next(Error('Couldn´t update the user password. Check console'));
-        });
-}
-// Crea un token que ocuparán en el frontend
-function createBlogger (res, next, user){
-    const userEmail = user.email;
-    const userRole = user.role;
-    delete user.email;
-    delete user.password;
-    delete user.role;
-    Controller.create_account(user)
-        .then((data) =>{
-            const token = auth_functions.createUserToken(userEmail, user.id_user_blogger, userRole);
-            res.send({
-                'message': 'Account creation completed. Now you can login',
-                'JWT': token
+
+// Usuario crea su cuenta con el emailToken
+async function register_user(req, res, next) {
+    let userData = req.body;
+    try {
+        const { email } = auth_functions.verifyToken(req.params.emailToken);
+        userData.email = email;
+        userData.password = await auth_functions.encryptPassword(userData.password);
+    } catch (error) {
+        next(Error('Token expired'));
+    }
+
+    try {
+        // #1.- Get user by email, 
+        let user;
+        await getUserBloggerByEmail(userData.email)
+            .then((userFounded) => {
+                user = userFounded;
+            })
+            .catch((err) => {
+                next(err)
             });
-        })
-        .catch((error) =>{
-            next(Error('Couldn´t insert data of blogger/user'));
-        });
+
+        userData.id_user_blogger = user.id_user_blogger;
+        userData.role = user.role;
+        
+        // #2.- Update User Password
+        await updateUserPassword(req, res, next, userData);
+        res.send(userData)
+        // #3.- Create Blogger
+        // await createBlogger(userData)
+        //     .then((response) => { res.send(response) })
+        //     .catch((err) =>{next(err)});
+    } catch (error) {
+        next(Error('Couldnt register the user'));
+    }
 }
 
 
