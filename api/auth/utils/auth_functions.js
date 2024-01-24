@@ -7,11 +7,14 @@ class AuthFunctions{
 
     _secret = config.api.secret;
 
-    createUserToken(userEmail) {
+    createUserToken(userEmail, id_user, role) {
         const payload = {
+            sub: id_user,
             email: userEmail,
+            role: role,
         }
-        const token= jwt.sign(payload, this._secret, {expiresIn: '7d'});
+        //const token= jwt.sign(payload, this._secret, {expiresIn: '7d'});
+        const token= jwt.sign(payload, this._secret, {expiresIn: '240s'});
         return token;
     }
 
@@ -28,8 +31,17 @@ class AuthFunctions{
         return passport.authenticate('local', {session: false});   
     }
 
-    // Dene obtener el user de alguna parte nuevamente
-    async refreshUserToken(userEmail){
+    jwtAuthenticateUser(){
+        try {
+            console.log('Sí autentiqué');
+            return passport.authenticate('jwt', {session:false});  
+        } catch (error) {
+            console.log('Authenticate JWT error');
+            console.log(error);
+        }
+    }
+
+    refreshUserToken(userEmail){
         return this.createUserToken(userEmail);
     }
 }

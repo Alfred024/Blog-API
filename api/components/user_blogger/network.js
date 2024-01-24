@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Controller = require('./index');
-// Auth
-const bcrypt = require('bcrypt');
-const passport = require('passport');
+// AuthFunctions
+const AuthFunctions = require('../../auth/utils/auth_functions');
+const auth_functions = new AuthFunctions();
 // Middlewares
 const { checkRoles, checkOwner } = require('../../middlewares/auth.handler');
 const {validatorHandler} = require('../../middlewares/validator.handler');
@@ -12,12 +12,13 @@ const { getUserBloggerSchema, putUserBloggerSchema, patchUserBloggerSchema, } = 
 // Boom errors
 const boom = require('@hapi/boom');
 
+
 // TODO: Implementar que aunque no sea el owner, si el usuario es 'ADMIN' pueda hacer CRUD
-router.get('/', passport.authenticate('jwt', {session:false}), checkRoles('ADMIN'), get);
-router.get('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), validatorHandler(getUserBloggerSchema, 'params'), get_by_id);
-router.put('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), validatorHandler(putUserBloggerSchema, 'body'), put);
-router.patch('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), validatorHandler(patchUserBloggerSchema, 'body'), patch);
-router.delete('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), delete_by_id);
+router.get('/', auth_functions.jwtAuthenticateUser(), get);
+router.get('/:id', auth_functions.jwtAuthenticateUser(), checkOwner(), validatorHandler(getUserBloggerSchema, 'params'), get_by_id);
+router.put('/:id', auth_functions.jwtAuthenticateUser(), checkOwner(), validatorHandler(putUserBloggerSchema, 'body'), put);
+router.patch('/:id', auth_functions.jwtAuthenticateUser(), checkOwner(), validatorHandler(patchUserBloggerSchema, 'body'), patch);
+router.delete('/:id', auth_functions.jwtAuthenticateUser(), checkOwner(), delete_by_id);
 
 async function get(req, res, next) {
     Controller.list()
@@ -42,7 +43,7 @@ async function get_by_id(req, res, next) {
 // No id found || Connection Refused
 async function put(req, res, next) {
     let data = req.body;
-    data.password = await bcrypt.hash(data.password, 5);
+    data.password = await auth_functions.encryptPassword(data.password);
     const id = req.params.id;
     Controller.update(data, id)
         .then((data) =>{
@@ -58,7 +59,7 @@ async function patch(req, res, next) {
     let data = req.body;
 
     if(data.password){
-        data.password = await bcrypt.hash(data.password, 5);
+        data.password = await auth_functions.encryptPassword(data.password);
     }
 
     const id = req.params.id;
