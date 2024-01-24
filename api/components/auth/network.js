@@ -70,7 +70,6 @@ async function registerUserByAdmin (req, res, next){
             res.send(`Email sended succesfully to ${userData.email}`);
         })
         .catch((err) =>{
-            console.log('Sí hubo hubo un error');
             next(Error(`Error trying to do user register.`));
         });
 }
@@ -99,14 +98,15 @@ async function register_user(req, res, next) {
 
         userData.id_user_blogger = user.id_user_blogger;
         userData.role = user.role;
-        
         // #2.- Update User Password
         await updateUserPassword(req, res, next, userData);
-        res.send(userData)
+        
         // #3.- Create Blogger
-        // await createBlogger(userData)
-        //     .then((response) => { res.send(response) })
-        //     .catch((err) =>{next(err)});
+        await createBlogger(userData)
+            .then((response) => { 
+                res.send(response) 
+            })
+            .catch((err) =>{next(err)});
     } catch (error) {
         next(Error('Couldnt register the user'));
     }
