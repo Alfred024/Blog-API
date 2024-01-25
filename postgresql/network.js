@@ -16,15 +16,22 @@ router.patch('/:table/:id', update);
 router.delete('/:table/:id', delete_by_id);
 
 async function list(req, res, next) {
+    
     try {
-        const data = await Store.select_all(req.params.table);
-        res.send(data);
+        if(req.body){
+            const data = await Store.select_by_range(req.params.table, req.body);
+            res.send(data);
+        }else{
+            const data = await Store.select_all(req.params.table);
+            res.send(data);
+        }
     } catch (error) {
         next(Error('DB "SELECT" Query error.'));
     }
 }
 
 async function get(req, res, next) {
+    console.log('PUTO 1');
     try {
         const data = await Store.select_where(req.params.table, req.params.id);
         res.send(data);
@@ -34,6 +41,7 @@ async function get(req, res, next) {
 }
 
 async function get_blogs_of_blogger(req, res, next) {
+    console.log('PUTO 2');
     try {
         const data = await Store.select_join(req.body);
         res.send(data);
@@ -43,6 +51,7 @@ async function get_blogs_of_blogger(req, res, next) {
 }
 
 async function get_user_blogger_by_email(req, res, next) {
+    console.log('PUTO 2');
     try {
         const data = await Store.select_by_param_name(req.body);
         res.send(data);

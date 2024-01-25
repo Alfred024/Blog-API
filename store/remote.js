@@ -47,7 +47,7 @@ function connectToRemoteDBService(host, port) {
         const {newUrl, newOptions} = evalueateMethod(method, url, options, data);
         options = newOptions;
         options.url = newUrl;
-        
+
         return axios(options)
             .then((response) => response.data)
             .catch((error) => {

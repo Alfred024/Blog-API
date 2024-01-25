@@ -80,6 +80,22 @@ function select_by_param_name(jsonData) {
     })
 }
 
+function select_by_range(table, jsonData) {
+    const { limit, offset } = jsonData;
+    return new Promise((resolve, reject) =>{
+        client.query(`SELECT * FROM ${table} ORDER BY id_${table} OFFSET ${offset} ROWS FETCH NEXT ${limit} ROWS ONLY;`, (error, data) =>{
+            if (error) {
+                //client.end();
+                return reject(error);
+            }else{
+                resolve(data.rows);
+                //client.end()
+            }
+        });
+    });
+}
+
+
 function insert(table, data) {
     return new Promise((resolve, reject) => {
         const { tableFields, valuesFields } = mapJsonDataToFields_Insert(data);
@@ -142,6 +158,7 @@ module.exports = {
     select_where,
     select_join,
     select_by_param_name,
+    select_by_range,
     insert,
     update_by_params,
     delete_by_id,

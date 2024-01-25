@@ -4,20 +4,29 @@ const Controller = require('./index');
 // Auth
 const passport = require('passport');
 // Schemas
-const { getBlogSchema, createBlogSchema, putBlogSchema, patchBlogSchema, } = require('../../schemas/blog.schema');
+const { getBlogSchema, createBlogSchema, putBlogSchema, patchBlogSchema, queryBlogSchema } = require('../../schemas/blog.schema');
 // Middlewares
 const {validatorHandler} = require('../../middlewares/validator.handler');
 const {checkRoles, checkOwner} = require('../../middlewares/auth.handler');
 
-router.get('/', passport.authenticate('jwt', {session:false}), get);
-router.get('/:id', passport.authenticate('jwt', {session:false}), validatorHandler(getBlogSchema, 'params'), get_by_id);
+router.get('/', get);
+router.get('/:id', validatorHandler(getBlogSchema, 'params'), get_by_id);
 router.post('/', passport.authenticate('jwt', {session:false}), validatorHandler(createBlogSchema, 'body'), post);
 router.put('/:id', passport.authenticate('jwt', {session:false}), validatorHandler(putBlogSchema, 'body'),checkOwner(), put);
 router.put('/:id', passport.authenticate('jwt', {session:false}), validatorHandler(patchBlogSchema, 'body'),checkOwner(), put);
 router.delete('/:id', passport.authenticate('jwt', {session:false}), checkOwner(), delete_by_id);
 
 async function get(req, res, next) {
-    Controller.list()
+    let limit = req.query.limit;
+    let offset = req.query.offset;
+
+    if (!limit || !offset){
+        limit = 5;
+        offset = 0;
+    }
+    console.log('limit: '+ limit);
+    console.log('offset: '+offset);
+    Controller.get_blogger({'limit': limit, 'offset': offset})
         .then((data) =>{
             res.send(data);
         })
