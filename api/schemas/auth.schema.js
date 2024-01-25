@@ -28,6 +28,7 @@ const postRegisterUserSchema = Joi.object({
 });
 
 const postRegisterBloggerSchema = Joi.object({
+    email: email.required(), 
     password: joiPassword
         .string()
         .minOfSpecialCharacters(1)

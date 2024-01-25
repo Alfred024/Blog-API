@@ -22,7 +22,7 @@ router.post('/login', validatorHandler(postAuthLogin, 'body'), auth_functions.lo
 router.post('/register-new-admin', validatorHandler(postRegisterAdminSchema, 'body'), registerNewAdmin);
 // Agregar middleware de checkApiKey
 router.post('/register-by-admin',  validatorHandler(postRegisterUserSchema, 'body'), registerUserByAdmin);
-router.post('/register/:emailToken', validatorHandler(postRegisterBloggerSchema, 'body'), register_user);
+router.post('/register', validatorHandler(postRegisterBloggerSchema, 'body'), register_user);
 
 // Para el login pedirá el token que se le creó al hacer el registro???
 async function login(req, res, next) {
@@ -76,10 +76,9 @@ async function registerUserByAdmin (req, res, next){
 
 // Usuario crea su cuenta con el emailToken
 async function register_user(req, res, next) {
+    // Me mande el email y el 
     let userData = req.body;
     try {
-        const { email } = auth_functions.verifyToken(req.params.emailToken);
-        userData.email = email;
         userData.password = await auth_functions.encryptPassword(userData.password);
     } catch (error) {
         next(Error('Token expired'));
