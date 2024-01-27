@@ -22,7 +22,7 @@ router.post('/login', validatorHandler(postAuthLogin, 'body'), auth_functions.lo
 router.post('/register-new-admin', validatorHandler(postRegisterAdminSchema, 'body'), registerNewAdmin);
 // Agregar middleware de checkApiKey
 router.post('/register-by-admin',  validatorHandler(postRegisterUserSchema, 'body'), registerUserByAdmin);
-router.post('/register', validatorHandler(postRegisterBloggerSchema, 'body'), register_user);
+router.post('/register', validatorHandler(postRegisterBloggerSchema, 'body'), auth_functions.jwtAuthenticateUser(),register_user);
 
 // Para el login pedirá el token que se le creó al hacer el registro???
 async function login(req, res, next) {

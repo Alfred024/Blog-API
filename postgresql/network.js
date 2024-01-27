@@ -16,10 +16,10 @@ router.patch('/:table/:id', update);
 router.delete('/:table/:id', delete_by_id);
 
 async function list(req, res, next) {
-    
+
     try {
-        if(req.body){
-            const data = await Store.select_by_range(req.params.table, req.bo);
+        if(Object.keys(req.body).length > 0){
+            const data = await Store.select_by_range(req.params.table, req.body);
             res.send(data);
         }else{
             const data = await Store.select_all(req.params.table);
